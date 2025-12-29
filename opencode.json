@@ -1,0 +1,13 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "model": "openrouter/gpt-oss-120b:free",
+    "provider": {
+        "openrouter": {
+            "models": {
+                "gpt-oss-120b:free": {
+                    "name": "GPT-OSS-120B (Free)"
+                }
+            }
+        }
+    }
+}
