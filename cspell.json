@@ -1,0 +1,28 @@
+{
+  "version": "0.2",
+  "language": "en,ja",
+  "words": [
+    "Akimi",
+    "akimi",
+    "speckit",
+    "Turborepo",
+    "Supertest",
+    "NestJS",
+    "PostgreSQL",
+    "RabbitMQ",
+    "monorepo",
+    "Microservices",
+    "microservices"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    ".git",
+    "dist",
+    "build",
+    "coverage",
+    "*.log",
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    "yarn.lock"
+  ]
+}
