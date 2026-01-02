@@ -1,17 +1,16 @@
 <!--
 Sync Impact Report:
-Version: 0.0.0 → 1.0.0 (Initial constitution establishment)
-Modified principles: N/A (initial creation)
-Added sections:
-  - All core principles (I-VII)
-  - Architecture & Technology Standards
-  - Development Workflow
-  - Governance
+Version: 1.0.0 → 1.1.0 (Authentication strategy update + Mental scope clarification)
+Modified principles:
+  - Principle III (DDD): Mental context expanded to include task management
+  - Principle VII (Security & Privacy): Authentication changed to OAuth 2.0 only (Google + Apple Sign In)
+Added sections: None
+Removed sections: None
 Templates requiring updates:
-  - ✅ .specify/templates/plan-template.md (validated - Constitution Check section present)
-  - ✅ .specify/templates/spec-template.md (validated - aligns with user story requirements)
-  - ✅ .specify/templates/tasks-template.md (validated - aligns with task structure)
-  - ✅ Command files (validated - generic guidance compatible)
+  - ✅ .specify/templates/plan-template.md (Constitution Check aligns)
+  - ✅ .specify/templates/spec-template.md (no changes needed)
+  - ✅ .specify/templates/tasks-template.md (no changes needed)
+  - ✅ Command files (no changes needed)
 Follow-up TODOs: None
 -->
 
@@ -52,17 +51,23 @@ Follow-up TODOs: None
 **ドメインモデルを中心に設計し、ビジネスロジックをドメイン層に集約する。**
 
 - ドメインは以下のバウンデッドコンテキストに分割する:
-  - **Medication**: 服薬管理、飲み合わせチェック
+  - **User**: ユーザー管理、認証・認可（OAuth 2.0 基盤）
+  - **Medication**: 服薬管理、服薬記録、リマインダー
+  - **Mental**: タスク管理、日記、気分トラッキング、精神面サポート、LLM によるカウンセリング
   - **Nutrition**: 食材管理、在庫管理、賞味期限管理、栄養分析
   - **Diet**: ダイエットサポート、献立サポート、カロリー計算
-  - **Mental**: 日記、精神面サポート、LLM によるカウンセリング
-  - **User**: ユーザー管理、認証・認可
-  - **AI**: LLM 統合、プロンプト管理、AI アシスタント機能
+  - **AI**: LLM 統合、プロンプト管理、AI アシスタント機能、全データ統合
 - 各バウンデッドコンテキストは独立したマイクロサービスとして実装する
 - ドメインイベントを使用してサービス間通信を行う
 - インフラストラクチャ層がドメイン層に依存してはならない (依存性逆転の原則)
 
-**Rationale**: 複雑な健康管理ドメインを適切に分割し、変更に強く、理解しやすいシステムを構築する。
+**Implementation Priority** (v1.0 MVP):
+1. **User** - 認証基盤（全サービスの前提）
+2. **Medication** - 服薬管理
+3. **Mental** - タスク管理機能
+4. 以降: Nutrition, Diet, AI（v2.0以降）
+
+**Rationale**: 複雑な健康管理ドメインを適切に分割し、変更に強く、理解しやすいシステムを構築する。優先順位は技術的依存関係とビジネス価値に基づく。
 
 ### IV. Microservices Architecture
 
@@ -106,13 +111,17 @@ Follow-up TODOs: None
 
 - すべての健康データは暗号化して保存する (at rest encryption)
 - 通信は HTTPS/TLS を使用する (in transit encryption)
-- 認証・認可は JWT + OAuth 2.0 / OpenID Connect を使用する
+- 認証・認可は **OAuth 2.0 / OpenID Connect のみ**を使用する
+  - **Google OAuth 2.0** (Web, Android, iOS)
+  - **Apple Sign In** (iOS, Web)
+  - メール/パスワード認証は実装しない（OAuth プロバイダーに認証を委譲）
+- JWT をセッショントークンとして使用する
 - GDPR および個人情報保護法に準拠する
 - 医薬品データベースやアレルギー情報は、信頼できる外部 API を使用する
 - LLM への入力データは、個人を特定できない形式にマスキングする
 - すべての API エンドポイントは、認証・認可チェックを行う
 
-**Rationale**: 健康データは極めてセンシティブ。法令順守とユーザーの信頼確保が必須。
+**Rationale**: 健康データは極めてセンシティブ。OAuth 2.0 専用とすることで、パスワード管理の脆弱性を排除し、ユーザーの既存認証情報を活用してセキュリティと利便性を両立する。
 
 ## Architecture & Technology Standards
 
@@ -122,12 +131,14 @@ Follow-up TODOs: None
 - **Backend Framework**: NestJS (マイクロサービス対応)
 - **Frontend (Web)**: Next.js 14 (App Router)
 - **Mobile**: React Native (Expo)
+- **CLI**: Commander.js
 - **Database**: PostgreSQL (各マイクロサービス), Redis (キャッシュ)
 - **Message Queue**: RabbitMQ または AWS SQS (イベント駆動通信)
 - **API Gateway**: Kong または AWS API Gateway
 - **Container**: Docker, Kubernetes (本番環境)
 - **CI/CD**: GitHub Actions
-- **Testing**: Jest (unit), Supertest (integration), Playwright (E2E)
+- **Testing**: Jest (unit), Supertest (integration), Pact (contract), Playwright (E2E web), Detox (E2E mobile)
+- **Authentication**: Passport.js (Google OAuth + Apple Sign In)
 
 ### Project Structure (Monorepo)
 
@@ -136,14 +147,15 @@ akimi/
 ├── apps/
 │   ├── api-gateway/          # API Gateway
 │   ├── web/                  # Next.js Web App
-│   └── mobile/               # React Native Mobile App
+│   ├── mobile/               # React Native Mobile App
+│   └── cli/                  # CLI ツール
 ├── services/
-│   ├── medication/           # 服薬管理マイクロサービス
-│   ├── nutrition/            # 栄養・食材管理マイクロサービス
-│   ├── diet/                 # ダイエット・献立マイクロサービス
-│   ├── mental/               # 日記・精神面マイクロサービス
-│   ├── user/                 # ユーザー管理マイクロサービス
-│   └── ai/                   # LLM 統合マイクロサービス
+│   ├── user/                 # ユーザー管理・認証マイクロサービス (P0 - 最優先)
+│   ├── medication/           # 服薬管理マイクロサービス (P1)
+│   ├── mental/               # タスク管理・日記・精神面マイクロサービス (P2)
+│   ├── nutrition/            # 栄養・食材管理マイクロサービス (保留)
+│   ├── diet/                 # ダイエット・献立マイクロサービス (v2.0)
+│   └── ai/                   # LLM 統合マイクロサービス (v2.0)
 ├── packages/
 │   ├── shared/               # 共通型定義、ユーティリティ
 │   ├── ui/                   # 共通 UI コンポーネント
@@ -210,4 +222,4 @@ akimi/
 - 例外的な実装は、必ず Complexity Tracking テーブル (plan.md) に記載する
 - 技術的負債は、四半期ごとに見直し、解消計画を立てる
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2025-12-29
+**Version**: 1.1.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2026-01-02
