@@ -1,0 +1,918 @@
+openapi: 3.0.3
+info:
+  title: Akimi User Authentication API
+  description: |
+    OAuth 2.0 authentication service providing Google and Apple Sign In,
+    JWT token management, user profiles, and household membership.
+
+    ## Authentication
+    All endpoints except `/auth/*` require a valid JWT access token
+    in the `Authorization: Bearer <token>` header.
+
+    ## Rate Limiting
+    - Auth endpoints: 10 requests/minute per IP
+    - Token endpoints: 60 requests/minute per user
+    - Device flow polling: 12 requests/minute per device_code
+  version: 1.0.0
+  contact:
+    name: Akimi Team
+
+servers:
+  - url: https://api.akimi.app/v1/user
+    description: Production
+  - url: https://staging-api.akimi.app/v1/user
+    description: Staging
+  - url: http://localhost:3001
+    description: Local development
+
+tags:
+  - name: auth
+    description: OAuth authentication flows
+  - name: tokens
+    description: Token management (refresh, revoke)
+  - name: profile
+    description: User profile management
+  - name: household
+    description: Household membership and invites
+  - name: account
+    description: Account lifecycle (deletion)
+
+paths:
+  # ============================================================
+  # AUTH ENDPOINTS
+  # ============================================================
+
+  /auth/google:
+    get:
+      tags: [auth]
+      summary: Initiate Google OAuth flow
+      description: Redirects to Google's authorization page
+      operationId: initiateGoogleAuth
+      parameters:
+        - name: redirect_uri
+          in: query
+          description: Where to redirect after OAuth (must be registered)
+          required: true
+          schema:
+            type: string
+            format: uri
+        - name: state
+          in: query
+          description: Client-generated state for CSRF protection
+          required: false
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to Google OAuth
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /auth/google/callback:
+    get:
+      tags: [auth]
+      summary: Google OAuth callback
+      description: Handles Google OAuth callback, creates/links user, returns tokens
+      operationId: googleAuthCallback
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to client with tokens
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/apple:
+    get:
+      tags: [auth]
+      summary: Initiate Apple Sign In flow
+      description: Redirects to Apple's authorization page
+      operationId: initiateAppleAuth
+      parameters:
+        - name: redirect_uri
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uri
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to Apple Sign In
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /auth/apple/callback:
+    post:
+      tags: [auth]
+      summary: Apple Sign In callback
+      description: Handles Apple callback (POST due to Apple's form submission)
+      operationId: appleAuthCallback
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                id_token:
+                  type: string
+                state:
+                  type: string
+                user:
+                  type: string
+                  description: JSON string with user info (first sign-in only)
+              required: [code, id_token, state]
+      responses:
+        '302':
+          description: Redirect to client with tokens
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/device/code:
+    post:
+      tags: [auth]
+      summary: Request device authorization code (CLI)
+      description: |
+        Initiates OAuth 2.0 Device Authorization Grant flow.
+        Returns a device_code and user_code for CLI authentication.
+      operationId: requestDeviceCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                  description: CLI client identifier
+              required: [client_id]
+      responses:
+        '200':
+          description: Device authorization response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceCodeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /auth/device/token:
+    post:
+      tags: [auth]
+      summary: Poll for device authorization completion
+      description: CLI polls this endpoint until user authorizes in browser
+      operationId: pollDeviceToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                device_code:
+                  type: string
+                client_id:
+                  type: string
+              required: [device_code, client_id]
+      responses:
+        '200':
+          description: Authorization complete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Authorization pending or error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTokenError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  # ============================================================
+  # TOKEN ENDPOINTS
+  # ============================================================
+
+  /tokens/refresh:
+    post:
+      tags: [tokens]
+      summary: Refresh access token
+      description: |
+        Exchange a valid refresh token for a new access token.
+        The refresh token is rotated (old one invalidated).
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required: [refresh_token]
+      responses:
+        '200':
+          description: New token pair
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Invalid or expired refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /tokens/revoke:
+    post:
+      tags: [tokens]
+      summary: Revoke a refresh token (logout)
+      description: Invalidates the specified refresh token
+      operationId: revokeToken
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required: [refresh_token]
+      responses:
+        '204':
+          description: Token revoked successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /tokens/revoke-all:
+    post:
+      tags: [tokens]
+      summary: Revoke all refresh tokens (logout everywhere)
+      description: Invalidates all refresh tokens for the authenticated user
+      operationId: revokeAllTokens
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: All tokens revoked
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ============================================================
+  # PROFILE ENDPOINTS
+  # ============================================================
+
+  /profile:
+    get:
+      tags: [profile]
+      summary: Get current user profile
+      operationId: getProfile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    patch:
+      tags: [profile]
+      summary: Update user profile
+      operationId: updateProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileUpdate'
+      responses:
+        '200':
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /profile/oauth-links:
+    get:
+      tags: [profile]
+      summary: List linked OAuth providers
+      operationId: getOAuthLinks
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of linked providers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OAuthLink'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ============================================================
+  # HOUSEHOLD ENDPOINTS
+  # ============================================================
+
+  /household:
+    get:
+      tags: [household]
+      summary: Get current household
+      operationId: getHousehold
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Household details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Household'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: User is not in a household
+
+    post:
+      tags: [household]
+      summary: Create a new household
+      operationId: createHousehold
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+              required: [name]
+      responses:
+        '201':
+          description: Household created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Household'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: User already in a household
+
+    delete:
+      tags: [household]
+      summary: Leave current household
+      operationId: leaveHousehold
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Left household
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Owner cannot leave without transferring ownership
+        '404':
+          description: User is not in a household
+
+  /household/members:
+    get:
+      tags: [household]
+      summary: List household members
+      operationId: getHouseholdMembers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of members
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HouseholdMember'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: User is not in a household
+
+  /household/members/{userId}:
+    delete:
+      tags: [household]
+      summary: Remove a member from household
+      operationId: removeMember
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Member removed
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Only owner can remove members
+        '404':
+          description: Member not found
+
+  /household/ownership:
+    post:
+      tags: [household]
+      summary: Transfer household ownership
+      operationId: transferOwnership
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                new_owner_id:
+                  type: string
+                  format: uuid
+              required: [new_owner_id]
+      responses:
+        '200':
+          description: Ownership transferred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Household'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Only owner can transfer ownership
+
+  /household/invites:
+    get:
+      tags: [household]
+      summary: List active invites
+      operationId: getInvites
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of active invites
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invites:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HouseholdInvite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Only owner can view invites
+        '404':
+          description: User is not in a household
+
+    post:
+      tags: [household]
+      summary: Create an invite code
+      operationId: createInvite
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Invite created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseholdInvite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Only owner can create invites
+        '404':
+          description: User is not in a household
+
+  /household/invites/{code}:
+    delete:
+      tags: [household]
+      summary: Revoke an invite code
+      operationId: revokeInvite
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Invite revoked
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Only owner can revoke invites
+        '404':
+          description: Invite not found
+
+  /household/join:
+    post:
+      tags: [household]
+      summary: Join a household using invite code
+      operationId: joinHousehold
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+              required: [code]
+      responses:
+        '200':
+          description: Joined household
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Household'
+        '400':
+          description: Invalid or expired code
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: User already in a household
+
+  # ============================================================
+  # ACCOUNT ENDPOINTS
+  # ============================================================
+
+  /account/delete:
+    post:
+      tags: [account]
+      summary: Request account deletion
+      description: Initiates 30-day deletion grace period
+      operationId: requestDeletion
+      security:
+        - bearerAuth: []
+      responses:
+        '202':
+          description: Deletion request accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deletion_scheduled_at:
+                    type: string
+                    format: date-time
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Deletion already requested
+
+  /account/delete/cancel:
+    post:
+      tags: [account]
+      summary: Cancel account deletion request
+      description: Cancels pending deletion during grace period
+      operationId: cancelDeletion
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Deletion cancelled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: No pending deletion request
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ============================================================
+  # HEALTH ENDPOINT
+  # ============================================================
+
+  /health:
+    get:
+      tags: [health]
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [healthy]
+                  timestamp:
+                    type: string
+                    format: date-time
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token
+
+  schemas:
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT access token (15 min expiry)
+        refresh_token:
+          type: string
+          description: Opaque refresh token (7 day sliding expiry)
+        token_type:
+          type: string
+          enum: [Bearer]
+        expires_in:
+          type: integer
+          description: Access token expiry in seconds
+      required: [access_token, refresh_token, token_type, expires_in]
+
+    DeviceCodeResponse:
+      type: object
+      properties:
+        device_code:
+          type: string
+          description: Code for CLI to poll with
+        user_code:
+          type: string
+          description: Code to show user (e.g., "ABCD-EFGH")
+        verification_uri:
+          type: string
+          format: uri
+          description: URL for user to visit
+        verification_uri_complete:
+          type: string
+          format: uri
+          description: URL with user_code pre-filled
+        expires_in:
+          type: integer
+          description: Code expiry in seconds
+        interval:
+          type: integer
+          description: Polling interval in seconds
+      required: [device_code, user_code, verification_uri, expires_in, interval]
+
+    DeviceTokenError:
+      type: object
+      properties:
+        error:
+          type: string
+          enum: [authorization_pending, slow_down, expired_token, access_denied]
+        error_description:
+          type: string
+      required: [error]
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        display_name:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+        household_id:
+          type: string
+          format: uuid
+          nullable: true
+        notification_preferences:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        deletion_requested_at:
+          type: string
+          format: date-time
+          nullable: true
+      required: [id, email, display_name, created_at]
+
+    ProfileUpdate:
+      type: object
+      properties:
+        display_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+        notification_preferences:
+          type: object
+
+    OAuthLink:
+      type: object
+      properties:
+        provider:
+          type: string
+          enum: [google, apple]
+        email:
+          type: string
+          format: email
+        linked_at:
+          type: string
+          format: date-time
+      required: [provider, email, linked_at]
+
+    Household:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        owner_id:
+          type: string
+          format: uuid
+        member_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+      required: [id, name, owner_id, member_count, created_at]
+
+    HouseholdMember:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        display_name:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+        role:
+          type: string
+          enum: [owner, member]
+        joined_at:
+          type: string
+          format: date-time
+      required: [user_id, display_name, role, joined_at]
+
+    HouseholdInvite:
+      type: object
+      properties:
+        code:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        created_by:
+          type: string
+          format: uuid
+        used:
+          type: boolean
+      required: [code, expires_at, created_at, created_by, used]
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          description: Additional error details
+      required: [error, message]
+
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Authentication required or failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    RateLimited:
+      description: Too many requests
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds to wait before retrying
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
