@@ -48,9 +48,13 @@
 | サービス                     | 主要モデル                                  | 無料枠                | データ学習       | 特徴                 |
 | ------------------------ | -------------------------------------- | ------------------ | ----------- | ------------------ |
 | **OpenRouter**           | DeepSeek R1, Qwen3-Coder-480B など45+    | 20 RPM → $5で1,000+ | 無料モデルはあり    | OpenAI互換API、フェイルオーバー |
+| **Goose**                | Bedrock, Anthropic, Gemini等           | 初回$10クレジット        | プロバイダー依存    | Block社、Tetrate経由   |
+| **Gemini CLI**           | Gemini 2.5 Pro (100万トークン)            | 60 req/min         | あり（Google）  | Google公式CLI        |
 | **Antigravity**          | Gemini 3 Pro, Claude Sonnet 4.5        | 5時間ごとリセット         | なし（Google管理） | VSCode統合、ベータ       |
 | **Roo Code / Kilo Code** | OpenRouter 経由                          | OpenRouter制限に準拠    | あり          | IDE密着              |
 | **Claude Code**          | Claude Opus 4.5                        | 利用制限あり             | なし          | 設計力・思考力            |
+
+**💡 注目**: Goose は初回 Tetrate 認証で $10 無料クレジット。Gemini CLI は Google 公式で 60 req/min 無料。
 
 ---
 
@@ -75,13 +79,22 @@
 
 ---
 
-### 実験・探索系
+### 実験・探索系・OSS CLI
 
-| ツール             | 用途           | 備考      |
-| --------------- | ------------ | ------- |
-| Antigravity     | プロトタイピング     | ベータ中無料  |
-| Cursor          | スポット用途       | 有料プラン推奨 |
-| DeepSeek (Web)  | 推論・コーディング実験  | Web無制限   |
+| ツール             | タイプ         | 用途              | 備考           |
+| --------------- | ----------- | --------------- | ------------ |
+| **Aider**       | CLI (OSS)   | ペアプログラミング、Git統合 | 多機能、コスト表示    |
+| **Cline**       | IDE/CLI (OSS) | 大規模リファクタ        | VS Code/JetBrains |
+| **Continue**    | CLI/IDE (OSS) | CI/CD統合         | ミッションコントロール  |
+| **OpenCode**    | CLI/IDE (OSS) | モデル非依存          | LSP連携        |
+| Antigravity     | IDE         | プロトタイピング        | ベータ中無料       |
+| Cursor          | IDE         | スポット用途          | 有料プラン推奨      |
+| DeepSeek (Web)  | Web         | 推論・コーディング実験     | Web無制限        |
+
+**💡 OSS CLI ツールの利点**:
+- 環境非依存、CIパイプライン統合可能
+- 任意のLLMプロバイダーを選択可能
+- 詳細は [modern-ai-tools.md](modern-ai-tools.md) 参照
 
 ---
 
@@ -264,11 +277,23 @@
 | Groq         | https://console.groq.com         | クレカ不要     |
 | SiliconFlow  | https://siliconflow.com          | 新規$1クレジット |
 | OpenRouter   | https://openrouter.ai            | $5で制限緩和   |
+| Goose        | https://block.github.io/goose/   | 初回$10無料   |
+| Gemini CLI   | https://github.com/google-gemini/gemini-cli | Google公式  |
 | Antigravity  | https://antigravity.google       | ベータ       |
 | DeepSeek     | https://api.deepseek.com         | 低価格       |
 
+### OSS コーディングエージェント
+
+| ツール        | URL                              | 備考          |
+| ---------- | -------------------------------- | ----------- |
+| Aider      | https://aider.chat/              | ペアプログラミング   |
+| Cline      | https://docs.cline.bot/          | 大規模リファクタ    |
+| Continue   | https://docs.continue.dev/       | CI/CD統合     |
+| OpenCode   | https://opencode.ai/             | モデル非依存      |
+
 ### 参考リソース
 
+- [modern-ai-tools.md](modern-ai-tools.md) - OSS Coding Agents 詳細ドキュメント
 - [free-llm-api-resources (GitHub)](https://github.com/cheahjs/free-llm-api-resources) - 定期更新されるリスト
 - [OpenRouter Free Models](https://openrouter.ai/collections/free-models) - 無料モデル一覧
 - [AI Free API](https://www.aifreeapi.com) - 無料枠比較サイト

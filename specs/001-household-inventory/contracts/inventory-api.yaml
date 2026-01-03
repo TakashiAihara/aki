@@ -1,0 +1,807 @@
+openapi: 3.0.3
+info:
+  title: Akimi Nutrition Service - Inventory API
+  description: |
+    家庭用在庫管理 REST API
+
+    Multi-platform inventory tracking for household food and products.
+    Supports personal and shared household inventories with offline sync.
+  version: 1.0.0
+  contact:
+    name: Akimi Development Team
+servers:
+  - url: https://api.akimi.health/v1
+    description: Production
+  - url: https://staging-api.akimi.health/v1
+    description: Staging
+  - url: http://localhost:3000/v1
+    description: Local Development
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: inventory
+    description: Inventory item operations
+  - name: households
+    description: Household management
+  - name: reference
+    description: Reference data (categories, storage locations)
+
+paths:
+  /inventory/items:
+    get:
+      tags: [inventory]
+      summary: List inventory items
+      description: |
+        Returns paginated list of inventory items for the authenticated user's household.
+        Supports filtering, search, and pagination.
+      operationId: listInventoryItems
+      parameters:
+        - name: category
+          in: query
+          description: Filter by category ID
+          schema:
+            type: string
+            format: uuid
+        - name: search
+          in: query
+          description: Search by item name (case-insensitive partial match)
+          schema:
+            type: string
+        - name: storage_location
+          in: query
+          description: Filter by storage location ID
+          schema:
+            type: string
+            format: uuid
+        - name: include_depleted
+          in: query
+          description: Include items with quantity = 0
+          schema:
+            type: boolean
+            default: false
+        - name: expiring_soon
+          in: query
+          description: Only show items expiring within 3 days
+          schema:
+            type: boolean
+            default: false
+        - name: limit
+          in: query
+          description: Page size (max 200)
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 200
+        - name: cursor
+          in: query
+          description: Cursor for pagination (opaque string from previous response)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of inventory items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags: [inventory]
+      summary: Add inventory item
+      description: |
+        Creates a new inventory item. If an item with the same (household_id, name, expiration_date)
+        exists, quantities are merged (idempotent upsert).
+      operationId: addInventoryItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInventoryItemRequest'
+      responses:
+        '201':
+          description: Item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryItem'
+        '200':
+          description: Item merged with existing (duplicate name + expiration)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /inventory/items/{id}:
+    get:
+      tags: [inventory]
+      summary: Get single inventory item
+      operationId: getInventoryItem
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      responses:
+        '200':
+          description: Item details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryItem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    patch:
+      tags: [inventory]
+      summary: Update inventory item
+      description: Partial update of inventory item fields
+      operationId: updateInventoryItem
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInventoryItemRequest'
+      responses:
+        '200':
+          description: Item updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Conflict - update rejected (stale timestamp)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: CONFLICT
+                message: "Your update was rejected because a newer version exists"
+                code: STALE_UPDATE
+
+    delete:
+      tags: [inventory]
+      summary: Delete inventory item
+      operationId: deleteInventoryItem
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      responses:
+        '204':
+          description: Item deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /inventory/sync:
+    post:
+      tags: [inventory]
+      summary: Batch sync offline changes
+      description: |
+        Accepts a batch of pending changes from offline mobile clients.
+        Applies changes in order, resolving conflicts using Last Write Wins.
+        Returns sync results with conflict notifications.
+      operationId: syncOfflineChanges
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncRequest'
+      responses:
+        '200':
+          description: Sync completed (may include conflicts)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /households:
+    post:
+      tags: [households]
+      summary: Create household
+      description: Creates a new household for shared inventory
+      operationId: createHousehold
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHouseholdRequest'
+      responses:
+        '201':
+          description: Household created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Household'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /households/{id}:
+    get:
+      tags: [households]
+      summary: Get household details
+      operationId: getHousehold
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Household details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Household'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /households/{id}/members:
+    get:
+      tags: [households]
+      summary: List household members
+      operationId: listHouseholdMembers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of members
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HouseholdMember'
+
+  /households/{id}/invitations:
+    post:
+      tags: [households]
+      summary: Invite member to household
+      description: Generates or returns invite code for sharing
+      operationId: createInvitation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Invitation created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inviteCode:
+                    type: string
+                    example: "ABC123XYZ789"
+                  expiresAt:
+                    type: string
+                    format: date-time
+
+  /households/join:
+    post:
+      tags: [households]
+      summary: Join household using invite code
+      operationId: joinHousehold
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [inviteCode]
+              properties:
+                inviteCode:
+                  type: string
+                  example: "ABC123XYZ789"
+      responses:
+        '200':
+          description: Successfully joined household
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Household'
+        '404':
+          description: Invalid invite code
+        '409':
+          description: Already a member
+
+  /categories:
+    get:
+      tags: [reference]
+      summary: List categories
+      description: Returns all available item categories
+      operationId: listCategories
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+
+  /storage-locations:
+    get:
+      tags: [reference]
+      summary: List storage locations
+      description: Returns all available storage locations
+      operationId: listStorageLocations
+      responses:
+        '200':
+          description: List of storage locations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  storageLocations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StorageLocation'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token containing userId and householdId claims
+
+  parameters:
+    ItemId:
+      name: id
+      in: path
+      required: true
+      description: Inventory item UUID
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    InventoryItem:
+      type: object
+      required:
+        - id
+        - name
+        - quantity
+        - unit
+        - categoryId
+        - isDepleted
+        - createdBy
+        - createdAt
+        - updatedAt
+        - updatedBy
+      properties:
+        id:
+          type: string
+          format: uuid
+        householdId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Null for personal inventory
+        name:
+          type: string
+          example: "りんご"
+        quantity:
+          type: number
+          format: double
+          minimum: 0
+          example: 5
+        unit:
+          type: string
+          example: "個"
+        expirationDate:
+          type: string
+          format: date
+          nullable: true
+          example: "2026-01-15"
+        categoryId:
+          type: string
+          format: uuid
+        storageLocationId:
+          type: string
+          format: uuid
+          nullable: true
+        imageUrl:
+          type: string
+          format: uri
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        isDepleted:
+          type: boolean
+          description: True when quantity = 0
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+          format: uuid
+
+    CreateInventoryItemRequest:
+      type: object
+      required:
+        - name
+        - quantity
+        - unit
+        - categoryId
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        quantity:
+          type: number
+          format: double
+          minimum: 0
+        unit:
+          type: string
+          minLength: 1
+          maxLength: 20
+        expirationDate:
+          type: string
+          format: date
+          nullable: true
+        categoryId:
+          type: string
+          format: uuid
+        storageLocationId:
+          type: string
+          format: uuid
+          nullable: true
+        imageUrl:
+          type: string
+          format: uri
+          nullable: true
+        notes:
+          type: string
+          maxLength: 1000
+          nullable: true
+
+    UpdateInventoryItemRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        quantity:
+          type: number
+          format: double
+          minimum: 0
+        unit:
+          type: string
+        expirationDate:
+          type: string
+          format: date
+          nullable: true
+        categoryId:
+          type: string
+          format: uuid
+        storageLocationId:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          maxLength: 1000
+          nullable: true
+
+    InventoryListResponse:
+      type: object
+      required:
+        - items
+        - hasMore
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryItem'
+        nextCursor:
+          type: string
+          nullable: true
+          description: Cursor for next page (null if no more results)
+        hasMore:
+          type: boolean
+        total:
+          type: integer
+          description: Total count (optional, may be expensive to compute)
+
+    SyncRequest:
+      type: object
+      required:
+        - changes
+        - deviceId
+      properties:
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncChange'
+        deviceId:
+          type: string
+          description: Unique device identifier
+        lastSyncAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    SyncChange:
+      type: object
+      required:
+        - operation
+        - itemId
+        - timestamp
+      properties:
+        operation:
+          type: string
+          enum: [CREATE, UPDATE, DELETE]
+        itemId:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+          description: Client-generated timestamp (adjusted for server offset)
+        data:
+          $ref: '#/components/schemas/CreateInventoryItemRequest'
+          nullable: true
+          description: Required for CREATE/UPDATE operations
+
+    SyncResponse:
+      type: object
+      required:
+        - applied
+        - conflicts
+        - serverTime
+      properties:
+        applied:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Item IDs successfully applied
+        conflicts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncConflict'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncError'
+        serverTime:
+          type: string
+          format: date-time
+          description: Server time for client clock adjustment
+
+    SyncConflict:
+      type: object
+      required:
+        - itemId
+        - operation
+        - reason
+      properties:
+        itemId:
+          type: string
+          format: uuid
+        operation:
+          type: string
+          enum: [CREATE, UPDATE, DELETE]
+        reason:
+          type: string
+          enum: [STALE_UPDATE, ALREADY_DELETED]
+        serverVersion:
+          $ref: '#/components/schemas/InventoryItem'
+
+    SyncError:
+      type: object
+      required:
+        - itemId
+        - error
+      properties:
+        itemId:
+          type: string
+          format: uuid
+        error:
+          type: string
+
+    Household:
+      type: object
+      required:
+        - id
+        - name
+        - createdBy
+        - inviteCode
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        createdBy:
+          type: string
+          format: uuid
+        inviteCode:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateHouseholdRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+
+    HouseholdMember:
+      type: object
+      required:
+        - userId
+        - displayName
+        - joinedAt
+      properties:
+        userId:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+        email:
+          type: string
+          format: email
+        joinedAt:
+          type: string
+          format: date-time
+
+    Category:
+      type: object
+      required:
+        - id
+        - name
+        - sortOrder
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "野菜"
+        icon:
+          type: string
+          nullable: true
+        sortOrder:
+          type: integer
+
+    StorageLocation:
+      type: object
+      required:
+        - id
+        - name
+        - sortOrder
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "冷蔵庫"
+        sortOrder:
+          type: integer
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          example: "Invalid quantity: must be >= 0"
+        code:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "BAD_REQUEST"
+            message: "Validation failed"
+            details:
+              quantity: "Must be a positive number"
+
+    Unauthorized:
+      description: Unauthorized - invalid or missing JWT
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "UNAUTHORIZED"
+            message: "Invalid or expired token"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "NOT_FOUND"
+            message: "Inventory item not found"
+
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "INTERNAL_ERROR"
+            message: "An unexpected error occurred"
