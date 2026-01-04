@@ -1,5 +1,5 @@
 {
-  "name": "@akimi/user-service",
+  "name": "@aki/user-service",
   "version": "0.1.0",
   "private": true,
   "description": "User Authentication Service - OAuth 2.0, JWT, Profile, Household",

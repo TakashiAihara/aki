@@ -160,7 +160,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Handle Apple Sign In callback',
-    description: 'Exchange Apple identity token for Akimi tokens',
+    description: 'Exchange Apple identity token for Aki tokens',
   })
   @ApiBody({ type: AppleCallbackDto })
   @ApiResponse({

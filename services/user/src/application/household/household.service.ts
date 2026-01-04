@@ -10,7 +10,7 @@ import {
   HouseholdInfo,
   HouseholdMemberInfo,
   HouseholdInviteInfo,
-} from '@akimi/shared';
+} from '@aki/shared';
 import { HouseholdRepository, HOUSEHOLD_REPOSITORY } from '@domain/repositories/household.repository';
 import { UserRepository, USER_REPOSITORY } from '@domain/repositories/user.repository';
 import { HouseholdRole } from '@domain/entities/household-member.entity';

@@ -5,7 +5,7 @@ services:
     build:
       context: ../..
       dockerfile: services/nutrition/Dockerfile
-    container_name: akimi-nutrition-service
+    container_name: aki-nutrition-service
     ports:
       - '3002:3002'
     environment:
@@ -13,9 +13,9 @@ services:
       - PORT=3002
       - DATABASE_HOST=postgres
       - DATABASE_PORT=5432
-      - DATABASE_NAME=akimi_nutrition
-      - DATABASE_USER=${DATABASE_USER:-akimi}
-      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-akimi_password}
+      - DATABASE_NAME=aki_nutrition
+      - DATABASE_USER=${DATABASE_USER:-aki}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-aki_password}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - JWT_PUBLIC_KEY_PATH=/app/keys/public.pem
@@ -26,7 +26,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - akimi-network
+      - aki-network
     restart: unless-stopped
     healthcheck:
       test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3002/health']
@@ -47,17 +47,17 @@ services:
 
   postgres:
     image: postgres:16-alpine
-    container_name: akimi-postgres
+    container_name: aki-postgres
     environment:
-      - POSTGRES_USER=${DATABASE_USER:-akimi}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-akimi_password}
-      - POSTGRES_DB=akimi_nutrition
+      - POSTGRES_USER=${DATABASE_USER:-aki}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-aki_password}
+      - POSTGRES_DB=aki_nutrition
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - akimi-network
+      - aki-network
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${DATABASE_USER:-akimi} -d akimi_nutrition']
+      test: ['CMD-SHELL', 'pg_isready -U ${DATABASE_USER:-aki} -d aki_nutrition']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -65,12 +65,12 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: akimi-redis
+    container_name: aki-redis
     command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
     volumes:
       - redis-data:/data
     networks:
-      - akimi-network
+      - aki-network
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
@@ -83,5 +83,5 @@ volumes:
   jwt-keys:
 
 networks:
-  akimi-network:
+  aki-network:
     driver: bridge

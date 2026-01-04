@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Akimi",
-    "slug": "akimi",
+    "name": "Aki",
+    "slug": "aki",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,14 +14,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.akimi.mobile"
+      "bundleIdentifier": "app.aki.mobile"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#22c55e"
       },
-      "package": "app.akimi.mobile"
+      "package": "app.aki.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"

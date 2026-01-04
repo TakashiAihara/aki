@@ -1,5 +1,5 @@
 /**
- * Nutrition Service shared types for Akimi inventory management
+ * Nutrition Service shared types for Aki inventory management
  */
 
 // ============================================================================

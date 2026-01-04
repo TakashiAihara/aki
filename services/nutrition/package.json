@@ -1,7 +1,7 @@
 {
-  "name": "@akimi/nutrition-service",
+  "name": "@aki/nutrition-service",
   "version": "1.0.0",
-  "description": "Akimi Nutrition Service - Household Inventory Management",
+  "description": "Aki Nutrition Service - Household Inventory Management",
   "private": true,
   "scripts": {
     "build": "nest build",
@@ -32,7 +32,7 @@
     "@nestjs/terminus": "^10.2.0",
     "@nestjs/throttler": "^5.1.1",
     "@nestjs/typeorm": "^10.0.1",
-    "@akimi/shared": "workspace:*",
+    "@aki/shared": "workspace:*",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "helmet": "^7.1.0",

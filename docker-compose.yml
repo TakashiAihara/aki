@@ -3,24 +3,24 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: akimi-postgres
+    container_name: aki-postgres
     environment:
-      POSTGRES_USER: akimi
-      POSTGRES_PASSWORD: akimi_dev
-      POSTGRES_DB: akimi_user
+      POSTGRES_USER: aki
+      POSTGRES_PASSWORD: aki_dev
+      POSTGRES_DB: aki_user
     ports:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U akimi -d akimi_user']
+      test: ['CMD-SHELL', 'pg_isready -U aki -d aki_user']
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: akimi-redis
+    container_name: aki-redis
     ports:
       - '6379:6379'
     volumes:
@@ -37,13 +37,13 @@ services:
     build:
       context: ./services/user
       dockerfile: Dockerfile
-    container_name: akimi-user-service
+    container_name: aki-user-service
     ports:
       - '3001:3001'
     environment:
       - NODE_ENV=development
       - PORT=3001
-      - DATABASE_URL=postgresql://akimi:akimi_dev@postgres:5432/akimi_user
+      - DATABASE_URL=postgresql://aki:aki_dev@postgres:5432/aki_user
       - REDIS_URL=redis://redis:6379
     depends_on:
       postgres:
@@ -61,7 +61,7 @@ services:
     build:
       context: ./services/nutrition
       dockerfile: Dockerfile
-    container_name: akimi-nutrition-service
+    container_name: aki-nutrition-service
     ports:
       - '3002:3002'
     environment:
@@ -69,9 +69,9 @@ services:
       - PORT=3002
       - DATABASE_HOST=postgres
       - DATABASE_PORT=5432
-      - DATABASE_NAME=akimi_nutrition
-      - DATABASE_USER=akimi
-      - DATABASE_PASSWORD=akimi_dev
+      - DATABASE_NAME=aki_nutrition
+      - DATABASE_USER=aki
+      - DATABASE_PASSWORD=aki_dev
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - JWT_PUBLIC_KEY_PATH=/app/keys/public.pem

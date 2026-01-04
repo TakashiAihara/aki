@@ -128,7 +128,7 @@ interface JwtPayload {
 |----------|-------------------|-------|
 | **Web** | Standard redirect to `/auth/callback/google` | Session cookie for state |
 | **iOS** | Universal Links + deep link | ASWebAuthenticationSession handles |
-| **Android** | Custom URL scheme + Chrome Custom Tabs | `akimi://auth/callback` |
+| **Android** | Custom URL scheme + Chrome Custom Tabs | `aki://auth/callback` |
 | **CLI** | Device Flow (no callback) | Browser-based authorization, CLI polls |
 
 ### 10. GDPR Compliance Implementation

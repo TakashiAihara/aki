@@ -7,7 +7,7 @@ import {
   CategoryDTO,
   StorageLocationDTO,
   InventoryItemListResponse,
-} from '@akimi/shared';
+} from '@aki/shared';
 
 interface ApiError {
   message: string;

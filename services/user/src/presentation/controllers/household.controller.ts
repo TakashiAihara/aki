@@ -17,7 +17,7 @@ import {
   ApiBearerAuth,
   ApiParam,
 } from '@nestjs/swagger';
-import { JwtPayload } from '@akimi/shared';
+import { JwtPayload } from '@aki/shared';
 import { HouseholdService } from '@application/household/household.service';
 import {
   CreateHouseholdRequestDto,

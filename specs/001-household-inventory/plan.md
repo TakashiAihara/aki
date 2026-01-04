@@ -83,7 +83,7 @@ Basic household inventory management system enabling users to track food items a
 
 **Overall Status**: ✅ ALL GATES PASS
 
-No constitution violations. This feature aligns perfectly with the Akimi architecture:
+No constitution violations. This feature aligns perfectly with the Aki architecture:
 - Fits cleanly into Nutrition bounded context
 - Extends existing monorepo without introducing new patterns
 - Follows established NestJS + Next.js + React Native stack
@@ -112,7 +112,7 @@ specs/001-household-inventory/
 ### Source Code (repository root)
 
 ```text
-akimi/
+aki/
 ├── services/
 │   └── nutrition/                    # NEW: Nutrition microservice
 │       ├── src/
@@ -171,7 +171,7 @@ akimi/
 │       │   ├── api-client.ts
 │       │   └── index.ts
 │       ├── bin/
-│       │   └── akimi-inventory
+│       │   └── aki-inventory
 │       └── package.json
 │
 ├── packages/

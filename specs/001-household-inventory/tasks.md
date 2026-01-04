@@ -203,11 +203,11 @@ Based on plan.md monorepo structure:
 
 ### CLI Commands
 
-- [ ] T074 [P] Implement `akimi inventory list` command
-- [ ] T075 [P] Implement `akimi inventory add` command
-- [ ] T076 [P] Implement `akimi inventory update` command
-- [ ] T077 [P] Implement `akimi inventory delete` command
-- [ ] T078 [P] Implement `akimi inventory search` command
+- [ ] T074 [P] Implement `aki inventory list` command
+- [ ] T075 [P] Implement `aki inventory add` command
+- [ ] T076 [P] Implement `aki inventory update` command
+- [ ] T077 [P] Implement `aki inventory delete` command
+- [ ] T078 [P] Implement `aki inventory search` command
 - [ ] T079 Add colorized output for expiration warnings
 
 **Checkpoint**: CLI complete

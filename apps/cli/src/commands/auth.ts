@@ -100,7 +100,7 @@ export function createAuthCommand(): Command {
         success(`ログイン中${email ? ` (${email})` : ''}`);
       } else {
         info('ログインしていません');
-        info('`akimi auth login` でログインしてください');
+        info('`aki auth login` でログインしてください');
       }
     });
 
@@ -121,7 +121,7 @@ export function createAuthCommand(): Command {
           spinner.succeed('トークンを更新しました');
         } else {
           spinner.fail('トークンの更新に失敗しました');
-          info('再ログインしてください: `akimi auth login`');
+          info('再ログインしてください: `aki auth login`');
         }
       } catch (err) {
         spinner.fail('トークンの更新に失敗しました');

@@ -4,9 +4,9 @@ const allowedOrigins: Record<string, string[]> = {
   development: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
   test: ['http://localhost:3000', 'http://localhost:3002'],
   production: [
-    'https://akimi.app',
-    'https://www.akimi.app',
-    'https://api.akimi.app',
+    'https://aki.app',
+    'https://www.aki.app',
+    'https://api.aki.app',
   ],
 };
 

@@ -14,7 +14,7 @@ Templates requiring updates:
 Follow-up TODOs: None
 -->
 
-# Akimi Constitution
+# Aki Constitution
 
 **Project**: AI-Integrated Health Management Platform (Web + Mobile)
 **Mission**: 生活の中の健康にかかわるすべてを管理し、LLM が励ましたり生活を手伝うための総合健康管理プラットフォーム
@@ -143,7 +143,7 @@ Follow-up TODOs: None
 ### Project Structure (Monorepo)
 
 ```
-akimi/
+aki/
 ├── apps/
 │   ├── api-gateway/          # API Gateway
 │   ├── web/                  # Next.js Web App

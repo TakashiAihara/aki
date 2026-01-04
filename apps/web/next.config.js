@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@akimi/shared'],
+  transpilePackages: ['@aki/shared'],
   experimental: {
     serverActions: true,
   },

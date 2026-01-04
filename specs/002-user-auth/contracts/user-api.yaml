@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Akimi User Authentication API
+  title: Aki User Authentication API
   description: |
     OAuth 2.0 authentication service providing Google and Apple Sign In,
     JWT token management, user profiles, and household membership.
@@ -15,12 +15,12 @@ info:
     - Device flow polling: 12 requests/minute per device_code
   version: 1.0.0
   contact:
-    name: Akimi Team
+    name: Aki Team
 
 servers:
-  - url: https://api.akimi.app/v1/user
+  - url: https://api.aki.app/v1/user
     description: Production
-  - url: https://staging-api.akimi.app/v1/user
+  - url: https://staging-api.aki.app/v1/user
     description: Staging
   - url: http://localhost:3001
     description: Local development

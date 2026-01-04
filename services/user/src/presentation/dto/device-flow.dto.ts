@@ -10,7 +10,7 @@ import { IsString, IsNotEmpty, Matches, IsOptional } from 'class-validator';
 export class DeviceCodeRequestDto {
   @ApiProperty({
     description: 'Client identifier',
-    example: 'akimi-cli',
+    example: 'aki-cli',
   })
   @IsString()
   @IsNotEmpty()
@@ -41,13 +41,13 @@ export class DeviceCodeResponseDto {
 
   @ApiProperty({
     description: 'URL for user to visit',
-    example: 'https://akimi.app/auth/device',
+    example: 'https://aki.app/auth/device',
   })
   verification_uri!: string;
 
   @ApiProperty({
     description: 'Complete URL with code pre-filled',
-    example: 'https://akimi.app/auth/device?code=ABCD-1234',
+    example: 'https://aki.app/auth/device?code=ABCD-1234',
   })
   verification_uri_complete!: string;
 
@@ -83,7 +83,7 @@ export class DeviceTokenRequestDto {
 
   @ApiProperty({
     description: 'Client identifier',
-    example: 'akimi-cli',
+    example: 'aki-cli',
   })
   @IsString()
   @IsNotEmpty()
@@ -132,7 +132,7 @@ export class DeviceAuthorizeRequestDto {
 export class DeviceVerifyResponseDto {
   @ApiProperty({
     description: 'Client identifier',
-    example: 'akimi-cli',
+    example: 'aki-cli',
   })
   client_id!: string;
 

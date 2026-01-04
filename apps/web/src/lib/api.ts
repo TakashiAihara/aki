@@ -7,7 +7,7 @@ import {
   StorageLocationDTO,
   InventoryItemListResponse,
   InventoryItemFilter,
-} from '@akimi/shared';
+} from '@aki/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 

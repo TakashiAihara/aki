@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtPayload, SyncRequest, SyncResponse } from '@akimi/shared';
+import { JwtPayload, SyncRequest, SyncResponse } from '@aki/shared';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { SyncUseCase } from '@application/sync/sync.usecase';
 

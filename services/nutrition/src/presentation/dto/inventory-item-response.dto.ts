@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { InventoryItem } from '@domain/entities/inventory-item.entity';
-import { ExpirationStatus, getExpirationStatus } from '@akimi/shared';
+import { ExpirationStatus, getExpirationStatus } from '@aki/shared';
 
 export class CategoryResponseDto {
   @ApiProperty({ description: 'Category UUID' })

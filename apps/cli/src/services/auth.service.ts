@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ConfigService } from './config.service';
-import { DeviceCodeResponse, TokenPair } from '@akimi/shared';
+import { DeviceCodeResponse, TokenPair } from '@aki/shared';
 
 const USER_SERVICE_URL = process.env.USER_SERVICE_URL || 'http://localhost:3001';
 

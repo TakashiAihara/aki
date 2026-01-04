@@ -13,7 +13,7 @@ module.exports = {
     '^@application/(.*)$': '<rootDir>/src/application/$1',
     '^@infrastructure/(.*)$': '<rootDir>/src/infrastructure/$1',
     '^@presentation/(.*)$': '<rootDir>/src/presentation/$1',
-    '^@akimi/shared$': '<rootDir>/../../packages/shared/src',
+    '^@aki/shared$': '<rootDir>/../../packages/shared/src',
   },
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   testTimeout: 30000,

@@ -1,9 +1,9 @@
 {
-  "name": "@akimi/cli",
+  "name": "@aki/cli",
   "version": "1.0.0",
-  "description": "Akimi CLI - Household Inventory Management from the command line",
+  "description": "Aki CLI - Household Inventory Management from the command line",
   "bin": {
-    "akimi": "./dist/index.js"
+    "aki": "./dist/index.js"
   },
   "main": "dist/index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@akimi/shared": "workspace:*",
+    "@aki/shared": "workspace:*",
     "axios": "^1.6.0",
     "chalk": "^4.1.2",
     "cli-table3": "^0.6.3",
@@ -36,6 +36,6 @@
     "cli",
     "inventory",
     "household",
-    "akimi"
+    "aki"
   ]
 }

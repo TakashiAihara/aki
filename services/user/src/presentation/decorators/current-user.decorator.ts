@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { JwtPayload } from '@akimi/shared';
+import { JwtPayload } from '@aki/shared';
 
 /**
  * Decorator to extract the current authenticated user from the request

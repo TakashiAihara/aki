@@ -23,7 +23,7 @@
       "@application/*": ["src/application/*"],
       "@infrastructure/*": ["src/infrastructure/*"],
       "@presentation/*": ["src/presentation/*"],
-      "@akimi/shared": ["../../packages/shared/src"]
+      "@aki/shared": ["../../packages/shared/src"]
     }
   },
   "include": ["src/**/*", "tests/**/*"],

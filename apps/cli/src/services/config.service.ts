@@ -1,14 +1,14 @@
 import Conf from 'conf';
 
-interface AkimiConfig {
+interface AkiConfig {
   accessToken?: string;
   refreshToken?: string;
   apiUrl?: string;
   userEmail?: string;
 }
 
-const config = new Conf<AkimiConfig>({
-  projectName: 'akimi-cli',
+const config = new Conf<AkiConfig>({
+  projectName: 'aki-cli',
   schema: {
     accessToken: { type: 'string' },
     refreshToken: { type: 'string' },
@@ -60,7 +60,7 @@ export const ConfigService = {
     return !!config.get('accessToken');
   },
 
-  getAll(): AkimiConfig {
+  getAll(): AkiConfig {
     return config.store;
   },
 };
