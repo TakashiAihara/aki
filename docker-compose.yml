@@ -56,6 +56,36 @@ services:
     profiles:
       - full
 
+  # Nutrition Service (for local development)
+  nutrition-service:
+    build:
+      context: ./services/nutrition
+      dockerfile: Dockerfile
+    container_name: akimi-nutrition-service
+    ports:
+      - '3002:3002'
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=akimi_nutrition
+      - DATABASE_USER=akimi
+      - DATABASE_PASSWORD=akimi_dev
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_PUBLIC_KEY_PATH=/app/keys/public.pem
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./services/nutrition/src:/app/src
+      - ./services/user/keys:/app/keys:ro
+    profiles:
+      - full
+
 volumes:
   postgres_data:
   redis_data:
