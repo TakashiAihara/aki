@@ -23,15 +23,17 @@ import { ListInventoryItemsUseCase } from '@application/inventory/list-inventory
 import { UpdateInventoryItemUseCase } from '@application/inventory/update-inventory-item.usecase';
 import { DeleteInventoryItemUseCase } from '@application/inventory/delete-inventory-item.usecase';
 import { GetExpiringItemsUseCase } from '@application/inventory/get-expiring-items.usecase';
+import { SyncUseCase } from '@application/sync/sync.usecase';
 
 // Controllers
 import { InventoryController } from '@presentation/controllers/inventory.controller';
 import { CategoryController } from '@presentation/controllers/category.controller';
 import { StorageLocationController } from '@presentation/controllers/storage-location.controller';
+import { SyncController } from '@presentation/controllers/sync.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Category, StorageLocation, InventoryItem])],
-  controllers: [InventoryController, CategoryController, StorageLocationController],
+  controllers: [InventoryController, CategoryController, StorageLocationController, SyncController],
   providers: [
     // Repositories
     {
@@ -54,6 +56,7 @@ import { StorageLocationController } from '@presentation/controllers/storage-loc
     UpdateInventoryItemUseCase,
     DeleteInventoryItemUseCase,
     GetExpiringItemsUseCase,
+    SyncUseCase,
   ],
   exports: [CATEGORY_REPOSITORY, STORAGE_LOCATION_REPOSITORY, INVENTORY_ITEM_REPOSITORY],
 })
