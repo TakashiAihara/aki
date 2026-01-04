@@ -1,0 +1,7 @@
+# JWT Keys Directory
+#
+# Generate keys using:
+#   openssl genrsa -out private.pem 2048
+#   openssl rsa -in private.pem -pubout -out public.pem
+#
+# DO NOT commit actual keys to version control!

@@ -26,14 +26,14 @@ Based on plan.md monorepo structure:
 
 **Purpose**: Project initialization and NestJS service structure
 
-- [ ] T001 Create monorepo structure with pnpm workspace in `pnpm-workspace.yaml`
-- [ ] T002 Initialize User Service NestJS project in `services/user/`
-- [ ] T003 [P] Initialize shared types package in `packages/shared/`
-- [ ] T004 [P] Configure TypeScript strict mode in `services/user/tsconfig.json`
-- [ ] T005 [P] Configure ESLint and Prettier in `services/user/.eslintrc.js`
-- [ ] T006 [P] Create Docker Compose for local PostgreSQL and Redis in `docker-compose.yml`
-- [ ] T007 [P] Configure Jest testing framework in `services/user/jest.config.js`
-- [ ] T008 Generate RSA key pair for JWT signing in `services/user/keys/`
+- [x] T001 Create monorepo structure with pnpm workspace in `pnpm-workspace.yaml`
+- [x] T002 Initialize User Service NestJS project in `services/user/`
+- [x] T003 [P] Initialize shared types package in `packages/shared/`
+- [x] T004 [P] Configure TypeScript strict mode in `services/user/tsconfig.json`
+- [x] T005 [P] Configure ESLint and Prettier in `services/user/.eslintrc.js`
+- [x] T006 [P] Create Docker Compose for local PostgreSQL and Redis in `docker-compose.yml`
+- [x] T007 [P] Configure Jest testing framework in `services/user/jest.config.js`
+- [x] T008 Generate RSA key pair for JWT signing in `services/user/keys/`
 
 ---
 
@@ -45,32 +45,32 @@ Based on plan.md monorepo structure:
 
 ### Database Setup
 
-- [ ] T009 Configure TypeORM module in `services/user/src/infrastructure/persistence/typeorm.config.ts`
-- [ ] T010 [P] Create User entity in `services/user/src/domain/entities/user.entity.ts`
-- [ ] T011 [P] Create OAuthLink entity in `services/user/src/domain/entities/oauth-link.entity.ts`
-- [ ] T012 [P] Create RefreshToken entity in `services/user/src/domain/entities/refresh-token.entity.ts`
-- [ ] T013 [P] Create AuthEvent entity in `services/user/src/domain/entities/auth-event.entity.ts`
-- [ ] T014 Generate initial database migration in `services/user/migrations/`
-- [ ] T015 Run migration and verify schema
+- [x] T009 Configure TypeORM module in `services/user/src/infrastructure/persistence/typeorm.config.ts`
+- [x] T010 [P] Create User entity in `services/user/src/domain/entities/user.entity.ts`
+- [x] T011 [P] Create OAuthLink entity in `services/user/src/domain/entities/oauth-link.entity.ts`
+- [x] T012 [P] Create RefreshToken entity in `services/user/src/domain/entities/refresh-token.entity.ts`
+- [x] T013 [P] Create AuthEvent entity in `services/user/src/domain/entities/auth-event.entity.ts`
+- [x] T014 Generate initial database migration in `services/user/migrations/`
+- [x] T015 Run migration and verify schema
 
 ### Infrastructure Services
 
-- [ ] T016 [P] Configure Redis module in `services/user/src/infrastructure/cache/redis.module.ts`
-- [ ] T017 [P] Implement structured logging service in `services/user/src/infrastructure/logging/logger.service.ts`
-- [ ] T018 [P] Create rate limiting module using @nestjs/throttler in `services/user/src/infrastructure/rate-limit/`
-- [ ] T019 Implement health check endpoint in `services/user/src/presentation/controllers/health.controller.ts`
+- [x] T016 [P] Configure Redis module in `services/user/src/infrastructure/cache/redis.module.ts`
+- [x] T017 [P] Implement structured logging service in `services/user/src/infrastructure/logging/logger.service.ts`
+- [x] T018 [P] Create rate limiting module using @nestjs/throttler in `services/user/src/infrastructure/rate-limit/`
+- [x] T019 Implement health check endpoint in `services/user/src/presentation/controllers/health.controller.ts`
 
 ### Shared Types & JWT Foundation
 
-- [ ] T020 [P] Define JwtPayload interface in `packages/shared/src/types/auth.types.ts`
-- [ ] T021 [P] Define User types and DTOs in `packages/shared/src/types/user.types.ts`
-- [ ] T022 Implement JWT service (sign/verify) in `services/user/src/infrastructure/auth/jwt.service.ts`
-- [ ] T023 Implement JWT strategy for Passport in `services/user/src/infrastructure/auth/jwt.strategy.ts`
-- [ ] T024 Create JwtAuthGuard in `services/user/src/presentation/guards/jwt-auth.guard.ts`
+- [x] T020 [P] Define JwtPayload interface in `packages/shared/src/types/auth.types.ts`
+- [x] T021 [P] Define User types and DTOs in `packages/shared/src/types/user.types.ts`
+- [x] T022 Implement JWT service (sign/verify) in `services/user/src/infrastructure/auth/jwt.service.ts`
+- [x] T023 Implement JWT strategy for Passport in `services/user/src/infrastructure/auth/jwt.strategy.ts`
+- [x] T024 Create JwtAuthGuard in `services/user/src/presentation/guards/jwt-auth.guard.ts`
 
 ### Auth Event Logging
 
-- [ ] T025 Implement AuthEventService for audit logging in `services/user/src/application/auth/auth-event.service.ts`
+- [x] T025 Implement AuthEventService for audit logging in `services/user/src/application/auth/auth-event.service.ts`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -84,22 +84,22 @@ Based on plan.md monorepo structure:
 
 ### Tests for User Story 1
 
-- [ ] T026 [P] [US1] Contract test for POST /auth/google/callback in `services/user/tests/contract/google-auth.contract.test.ts`
-- [ ] T027 [P] [US1] Integration test for Google OAuth flow in `services/user/tests/integration/google-auth.integration.test.ts`
-- [ ] T028 [P] [US1] Unit test for GoogleOAuthUseCase in `services/user/tests/unit/google-oauth.usecase.test.ts`
+- [x] T026 [P] [US1] Contract test for POST /auth/google/callback in `services/user/tests/contract/google-auth.contract.test.ts`
+- [x] T027 [P] [US1] Integration test for Google OAuth flow in `services/user/tests/integration/google-auth.integration.test.ts`
+- [x] T028 [P] [US1] Unit test for GoogleOAuthUseCase in `services/user/tests/unit/google-oauth.usecase.test.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T029 [P] [US1] Create UserRepository interface in `services/user/src/domain/repositories/user.repository.ts`
-- [ ] T030 [P] [US1] Create OAuthLinkRepository interface in `services/user/src/domain/repositories/oauth-link.repository.ts`
-- [ ] T031 [P] [US1] Implement TypeORM UserRepository in `services/user/src/infrastructure/persistence/user.repository.impl.ts`
-- [ ] T032 [P] [US1] Implement TypeORM OAuthLinkRepository in `services/user/src/infrastructure/persistence/oauth-link.repository.impl.ts`
-- [ ] T033 [US1] Configure Google Passport strategy in `services/user/src/infrastructure/auth/google.strategy.ts`
-- [ ] T034 [US1] Implement GoogleOAuthUseCase (create/link user, issue tokens) in `services/user/src/application/auth/google-oauth.usecase.ts`
-- [ ] T035 [US1] Create token response DTOs in `services/user/src/presentation/dto/token.dto.ts`
-- [ ] T036 [US1] Implement AuthController with Google endpoints in `services/user/src/presentation/controllers/auth.controller.ts`
-- [ ] T037 [US1] Add OAuth state validation (CSRF protection) in `services/user/src/infrastructure/auth/oauth-state.service.ts`
-- [ ] T038 [US1] Wire up AuthModule with all Google OAuth components in `services/user/src/auth.module.ts`
+- [x] T029 [P] [US1] Create UserRepository interface in `services/user/src/domain/repositories/user.repository.ts`
+- [x] T030 [P] [US1] Create OAuthLinkRepository interface in `services/user/src/domain/repositories/oauth-link.repository.ts`
+- [x] T031 [P] [US1] Implement TypeORM UserRepository in `services/user/src/infrastructure/persistence/user.repository.impl.ts`
+- [x] T032 [P] [US1] Implement TypeORM OAuthLinkRepository in `services/user/src/infrastructure/persistence/oauth-link.repository.impl.ts`
+- [x] T033 [US1] Configure Google Passport strategy in `services/user/src/infrastructure/auth/google.strategy.ts`
+- [x] T034 [US1] Implement GoogleOAuthUseCase (create/link user, issue tokens) in `services/user/src/application/auth/google-oauth.usecase.ts`
+- [x] T035 [US1] Create token response DTOs in `services/user/src/presentation/dto/token.dto.ts`
+- [x] T036 [US1] Implement AuthController with Google endpoints in `services/user/src/presentation/controllers/auth.controller.ts`
+- [x] T037 [US1] Add OAuth state validation (CSRF protection) in `services/user/src/infrastructure/auth/oauth-state.service.ts`
+- [x] T038 [US1] Wire up AuthModule with all Google OAuth components in `services/user/src/auth.module.ts`
 
 **Checkpoint**: User Story 1 complete - Google sign-in functional and tested
 
@@ -113,17 +113,17 @@ Based on plan.md monorepo structure:
 
 ### Tests for User Story 2
 
-- [ ] T039 [P] [US2] Contract test for POST /auth/apple/callback in `services/user/tests/contract/apple-auth.contract.test.ts`
-- [ ] T040 [P] [US2] Integration test for Apple Sign In flow in `services/user/tests/integration/apple-auth.integration.test.ts`
-- [ ] T041 [P] [US2] Unit test for AppleSignInUseCase in `services/user/tests/unit/apple-signin.usecase.test.ts`
+- [x] T039 [P] [US2] Contract test for POST /auth/apple/callback in `services/user/tests/contract/apple-auth.contract.test.ts`
+- [x] T040 [P] [US2] Integration test for Apple Sign In flow in `services/user/tests/integration/apple-auth.integration.test.ts`
+- [x] T041 [P] [US2] Unit test for AppleSignInUseCase in `services/user/tests/unit/apple-signin.usecase.test.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T042 [US2] Configure Apple Passport strategy in `services/user/src/infrastructure/auth/apple.strategy.ts`
-- [ ] T043 [US2] Implement Apple identity token verification in `services/user/src/infrastructure/auth/apple-token.service.ts`
-- [ ] T044 [US2] Implement AppleSignInUseCase in `services/user/src/application/auth/apple-signin.usecase.ts`
-- [ ] T045 [US2] Add Apple callback endpoint to AuthController in `services/user/src/presentation/controllers/auth.controller.ts`
-- [ ] T046 [US2] Handle private relay email edge case in AppleSignInUseCase
+- [x] T042 [US2] Configure Apple Passport strategy in `services/user/src/infrastructure/auth/apple.strategy.ts`
+- [x] T043 [US2] Implement Apple identity token verification in `services/user/src/infrastructure/auth/apple-token.service.ts`
+- [x] T044 [US2] Implement AppleSignInUseCase in `services/user/src/application/auth/apple-signin.usecase.ts`
+- [x] T045 [US2] Add Apple callback endpoint to AuthController in `services/user/src/presentation/controllers/auth.controller.ts`
+- [x] T046 [US2] Handle private relay email edge case in AppleSignInUseCase
 
 **Checkpoint**: User Story 2 complete - Apple Sign In functional and tested
 
@@ -137,21 +137,21 @@ Based on plan.md monorepo structure:
 
 ### Tests for User Story 3
 
-- [ ] T047 [P] [US3] Contract test for POST /tokens/refresh in `services/user/tests/contract/token-refresh.contract.test.ts`
-- [ ] T048 [P] [US3] Contract test for POST /tokens/revoke in `services/user/tests/contract/token-revoke.contract.test.ts`
-- [ ] T049 [P] [US3] Integration test for token lifecycle in `services/user/tests/integration/token-lifecycle.integration.test.ts`
-- [ ] T050 [P] [US3] Unit test for TokenRefreshUseCase in `services/user/tests/unit/token-refresh.usecase.test.ts`
+- [x] T047 [P] [US3] Contract test for POST /tokens/refresh in `services/user/tests/contract/token-refresh.contract.test.ts`
+- [x] T048 [P] [US3] Contract test for POST /tokens/revoke in `services/user/tests/contract/token-revoke.contract.test.ts`
+- [x] T049 [P] [US3] Integration test for token lifecycle in `services/user/tests/integration/token-lifecycle.integration.test.ts`
+- [x] T050 [P] [US3] Unit test for TokenRefreshUseCase in `services/user/tests/unit/token-refresh.usecase.test.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T051 [P] [US3] Create RefreshTokenRepository interface in `services/user/src/domain/repositories/refresh-token.repository.ts`
-- [ ] T052 [US3] Implement TypeORM RefreshTokenRepository in `services/user/src/infrastructure/persistence/refresh-token.repository.impl.ts`
-- [ ] T053 [US3] Implement RefreshTokenService (hash, store, rotate) in `services/user/src/application/auth/refresh-token.service.ts`
-- [ ] T054 [US3] Implement TokenRefreshUseCase in `services/user/src/application/auth/token-refresh.usecase.ts`
-- [ ] T055 [US3] Implement LogoutUseCase (single token revoke) in `services/user/src/application/auth/logout.usecase.ts`
-- [ ] T056 [US3] Create TokenController with refresh/revoke endpoints in `services/user/src/presentation/controllers/token.controller.ts`
-- [ ] T057 [US3] Implement token blacklist in Redis in `services/user/src/infrastructure/cache/token-blacklist.service.ts`
-- [ ] T058 [US3] Add revoke-all endpoint for logout everywhere in TokenController
+- [x] T051 [P] [US3] Create RefreshTokenRepository interface in `services/user/src/domain/repositories/refresh-token.repository.ts`
+- [x] T052 [US3] Implement TypeORM RefreshTokenRepository in `services/user/src/infrastructure/persistence/refresh-token.repository.impl.ts`
+- [x] T053 [US3] Implement RefreshTokenService (hash, store, rotate) in `services/user/src/application/auth/refresh-token.service.ts`
+- [x] T054 [US3] Implement TokenRefreshUseCase in `services/user/src/application/auth/token-refresh.usecase.ts`
+- [x] T055 [US3] Implement LogoutUseCase (single token revoke) in `services/user/src/application/auth/logout.usecase.ts`
+- [x] T056 [US3] Create TokenController with refresh/revoke endpoints in `services/user/src/presentation/controllers/token.controller.ts`
+- [x] T057 [US3] Implement token blacklist in Redis in `services/user/src/infrastructure/cache/token-blacklist.service.ts`
+- [x] T058 [US3] Add revoke-all endpoint for logout everywhere in TokenController
 
 **Checkpoint**: User Story 3 complete - Token refresh and revocation functional
 
@@ -165,18 +165,18 @@ Based on plan.md monorepo structure:
 
 ### Tests for User Story 4
 
-- [ ] T059 [P] [US4] Contract test for GET /profile in `services/user/tests/contract/profile-get.contract.test.ts`
-- [ ] T060 [P] [US4] Contract test for PATCH /profile in `services/user/tests/contract/profile-update.contract.test.ts`
-- [ ] T061 [P] [US4] Integration test for profile sync across sessions in `services/user/tests/integration/profile-sync.integration.test.ts`
-- [ ] T062 [P] [US4] Unit test for ProfileService in `services/user/tests/unit/profile.service.test.ts`
+- [x] T059 [P] [US4] Contract test for GET /profile in `services/user/tests/contract/profile-get.contract.test.ts`
+- [x] T060 [P] [US4] Contract test for PATCH /profile in `services/user/tests/contract/profile-update.contract.test.ts`
+- [x] T061 [P] [US4] Integration test for profile sync across sessions in `services/user/tests/integration/profile-sync.integration.test.ts`
+- [x] T062 [P] [US4] Unit test for ProfileService in `services/user/tests/unit/profile.service.test.ts`
 
 ### Implementation for User Story 4
 
-- [ ] T063 [US4] Implement ProfileService in `services/user/src/application/profile/profile.service.ts`
-- [ ] T064 [US4] Create profile DTOs (request/response) in `services/user/src/presentation/dto/profile.dto.ts`
-- [ ] T065 [US4] Create ProfileController in `services/user/src/presentation/controllers/profile.controller.ts`
-- [ ] T066 [US4] Add display_name validation (1-100 chars, allowed characters) in ProfileService
-- [ ] T067 [US4] Add GET /profile/oauth-links endpoint to ProfileController
+- [x] T063 [US4] Implement ProfileService in `services/user/src/application/profile/profile.service.ts`
+- [x] T064 [US4] Create profile DTOs (request/response) in `services/user/src/presentation/dto/profile.dto.ts`
+- [x] T065 [US4] Create ProfileController in `services/user/src/presentation/controllers/profile.controller.ts`
+- [x] T066 [US4] Add display_name validation (1-100 chars, allowed characters) in ProfileService
+- [x] T067 [US4] Add GET /profile/oauth-links endpoint to ProfileController
 
 **Checkpoint**: User Story 4 complete - Profile management functional
 
@@ -190,27 +190,27 @@ Based on plan.md monorepo structure:
 
 ### Tests for User Story 5
 
-- [ ] T068 [P] [US5] Contract test for POST /household in `services/user/tests/contract/household-create.contract.test.ts`
-- [ ] T069 [P] [US5] Contract test for POST /household/join in `services/user/tests/contract/household-join.contract.test.ts`
-- [ ] T070 [P] [US5] Contract test for POST /household/invites in `services/user/tests/contract/household-invite.contract.test.ts`
-- [ ] T071 [P] [US5] Integration test for household lifecycle in `services/user/tests/integration/household-lifecycle.integration.test.ts`
-- [ ] T072 [P] [US5] Unit test for HouseholdService in `services/user/tests/unit/household.service.test.ts`
+- [x] T068 [P] [US5] Contract test for POST /household in `services/user/tests/contract/household-create.contract.test.ts`
+- [x] T069 [P] [US5] Contract test for POST /household/join in `services/user/tests/contract/household-join.contract.test.ts`
+- [x] T070 [P] [US5] Contract test for POST /household/invites in `services/user/tests/contract/household-invite.contract.test.ts`
+- [x] T071 [P] [US5] Integration test for household lifecycle in `services/user/tests/integration/household-lifecycle.integration.test.ts`
+- [x] T072 [P] [US5] Unit test for HouseholdService in `services/user/tests/unit/household.service.test.ts`
 
 ### Implementation for User Story 5
 
-- [ ] T073 [P] [US5] Create Household entity in `services/user/src/domain/entities/household.entity.ts`
-- [ ] T074 [P] [US5] Create HouseholdMember entity in `services/user/src/domain/entities/household-member.entity.ts`
-- [ ] T075 [P] [US5] Create HouseholdInvite entity in `services/user/src/domain/entities/household-invite.entity.ts`
-- [ ] T076 Generate household migration in `services/user/migrations/`
-- [ ] T077 [P] [US5] Create HouseholdRepository interface in `services/user/src/domain/repositories/household.repository.ts`
-- [ ] T078 [US5] Implement TypeORM HouseholdRepository in `services/user/src/infrastructure/persistence/household.repository.impl.ts`
-- [ ] T079 [US5] Implement HouseholdService (create, join, leave, invite) in `services/user/src/application/household/household.service.ts`
-- [ ] T080 [US5] Implement invite code generation (8 char, no ambiguous chars) in HouseholdService
-- [ ] T081 [US5] Create household DTOs in `services/user/src/presentation/dto/household.dto.ts`
-- [ ] T082 [US5] Create HouseholdController in `services/user/src/presentation/controllers/household.controller.ts`
-- [ ] T083 [US5] Implement ownership transfer logic in HouseholdService
-- [ ] T084 [US5] Add member removal endpoint (owner only) to HouseholdController
-- [ ] T085 [US5] Enforce single household membership per user
+- [x] T073 [P] [US5] Create Household entity in `services/user/src/domain/entities/household.entity.ts`
+- [x] T074 [P] [US5] Create HouseholdMember entity in `services/user/src/domain/entities/household-member.entity.ts`
+- [x] T075 [P] [US5] Create HouseholdInvite entity in `services/user/src/domain/entities/household-invite.entity.ts`
+- [x] T076 Generate household migration in `services/user/migrations/`
+- [x] T077 [P] [US5] Create HouseholdRepository interface in `services/user/src/domain/repositories/household.repository.ts`
+- [x] T078 [US5] Implement TypeORM HouseholdRepository in `services/user/src/infrastructure/persistence/household.repository.impl.ts`
+- [x] T079 [US5] Implement HouseholdService (create, join, leave, invite) in `services/user/src/application/household/household.service.ts`
+- [x] T080 [US5] Implement invite code generation (8 char, no ambiguous chars) in HouseholdService
+- [x] T081 [US5] Create household DTOs in `services/user/src/presentation/dto/household.dto.ts`
+- [x] T082 [US5] Create HouseholdController in `services/user/src/presentation/controllers/household.controller.ts`
+- [x] T083 [US5] Implement ownership transfer logic in HouseholdService
+- [x] T084 [US5] Add member removal endpoint (owner only) to HouseholdController
+- [x] T085 [US5] Enforce single household membership per user
 
 **Checkpoint**: User Story 5 complete - Household management functional
 
@@ -224,20 +224,20 @@ Based on plan.md monorepo structure:
 
 ### Tests for User Story 6
 
-- [ ] T086 [P] [US6] Contract test for POST /account/delete in `services/user/tests/contract/account-delete.contract.test.ts`
-- [ ] T087 [P] [US6] Contract test for POST /account/delete/cancel in `services/user/tests/contract/account-delete-cancel.contract.test.ts`
-- [ ] T088 [P] [US6] Integration test for GDPR deletion flow in `services/user/tests/integration/gdpr-deletion.integration.test.ts`
-- [ ] T089 [P] [US6] Unit test for AccountDeletionService in `services/user/tests/unit/account-deletion.service.test.ts`
+- [x] T086 [P] [US6] Contract test for POST /account/delete in `services/user/tests/contract/account-delete.contract.test.ts`
+- [x] T087 [P] [US6] Contract test for POST /account/delete/cancel in `services/user/tests/contract/account-delete-cancel.contract.test.ts`
+- [x] T088 [P] [US6] Integration test for GDPR deletion flow in `services/user/tests/integration/gdpr-deletion.integration.test.ts`
+- [x] T089 [P] [US6] Unit test for AccountDeletionService in `services/user/tests/unit/account-deletion.service.test.ts`
 
 ### Implementation for User Story 6
 
-- [ ] T090 [US6] Implement AccountDeletionService (request, cancel, process) in `services/user/src/application/account/account-deletion.service.ts`
-- [ ] T091 [US6] Create account DTOs in `services/user/src/presentation/dto/account.dto.ts`
-- [ ] T092 [US6] Create AccountController with delete endpoints in `services/user/src/presentation/controllers/account.controller.ts`
-- [ ] T093 [US6] Implement scheduled deletion job in `services/user/src/infrastructure/jobs/deletion-processor.job.ts`
-- [ ] T094 [US6] Configure NestJS scheduler for daily deletion check at 02:00 UTC
-- [ ] T095 [US6] Handle household ownership transfer on account deletion
-- [ ] T096 [US6] Log all deletion events to AuthEvent table
+- [x] T090 [US6] Implement AccountDeletionService (request, cancel, process) in `services/user/src/application/account/account-deletion.service.ts`
+- [x] T091 [US6] Create account DTOs in `services/user/src/presentation/dto/account.dto.ts`
+- [x] T092 [US6] Create AccountController with delete endpoints in `services/user/src/presentation/controllers/account.controller.ts`
+- [x] T093 [US6] Implement scheduled deletion job in `services/user/src/infrastructure/jobs/deletion-processor.job.ts`
+- [x] T094 [US6] Configure NestJS scheduler for daily deletion check at 02:00 UTC
+- [x] T095 [US6] Handle household ownership transfer on account deletion
+- [x] T096 [US6] Log all deletion events to AuthEvent table
 
 **Checkpoint**: User Story 6 complete - GDPR-compliant account deletion functional
 
@@ -251,20 +251,20 @@ Based on plan.md monorepo structure:
 
 ### Tests for User Story 7
 
-- [ ] T097 [P] [US7] Contract test for POST /auth/device/code in `services/user/tests/contract/device-code.contract.test.ts`
-- [ ] T098 [P] [US7] Contract test for POST /auth/device/token in `services/user/tests/contract/device-token.contract.test.ts`
-- [ ] T099 [P] [US7] Integration test for device flow in `services/user/tests/integration/device-flow.integration.test.ts`
-- [ ] T100 [P] [US7] Unit test for DeviceFlowUseCase in `services/user/tests/unit/device-flow.usecase.test.ts`
+- [x] T097 [P] [US7] Contract test for POST /auth/device/code in `services/user/tests/contract/device-code.contract.test.ts`
+- [x] T098 [P] [US7] Contract test for POST /auth/device/token in `services/user/tests/contract/device-token.contract.test.ts`
+- [x] T099 [P] [US7] Integration test for device flow in `services/user/tests/integration/device-flow.integration.test.ts`
+- [x] T100 [P] [US7] Unit test for DeviceFlowUseCase in `services/user/tests/unit/device-flow.usecase.test.ts`
 
 ### Implementation for User Story 7
 
-- [ ] T101 [P] [US7] Create DeviceCode entity in `services/user/src/domain/entities/device-code.entity.ts`
-- [ ] T102 Generate device_code migration in `services/user/migrations/`
-- [ ] T103 [US7] Implement DeviceFlowUseCase in `services/user/src/application/auth/device-flow.usecase.ts`
-- [ ] T104 [US7] Generate user-friendly device codes (XXXX-XXXX format) in DeviceFlowUseCase
-- [ ] T105 [US7] Add device code endpoints to AuthController
-- [ ] T106 [US7] Create device authorization web page in `services/user/src/presentation/views/device-auth.html`
-- [ ] T107 [US7] Implement device code expiration (15 min) and polling rate limit (5s interval)
+- [x] T101 [P] [US7] Create DeviceCode entity in `services/user/src/domain/entities/device-code.entity.ts`
+- [x] T102 Generate device_code migration in `services/user/migrations/`
+- [x] T103 [US7] Implement DeviceFlowUseCase in `services/user/src/application/auth/device-flow.usecase.ts`
+- [x] T104 [US7] Generate user-friendly device codes (XXXX-XXXX format) in DeviceFlowUseCase
+- [x] T105 [US7] Add device code endpoints to AuthController
+- [x] T106 [US7] Create device authorization web page in `services/user/src/presentation/views/device-auth.html`
+- [x] T107 [US7] Implement device code expiration (15 min) and polling rate limit (5s interval)
 
 **Checkpoint**: User Story 7 complete - CLI device flow authentication functional
 
@@ -276,30 +276,30 @@ Based on plan.md monorepo structure:
 
 ### Security Hardening
 
-- [ ] T108 [P] Implement AES-256 encryption for refresh tokens at rest in RefreshTokenRepository
-- [ ] T109 [P] Add CORS configuration in `services/user/src/main.ts`
-- [ ] T110 [P] Add Helmet middleware for security headers
-- [ ] T111 Audit all endpoints for proper auth guards
+- [x] T108 [P] Implement AES-256 encryption for refresh tokens at rest in RefreshTokenRepository
+- [x] T109 [P] Add CORS configuration in `services/user/src/main.ts`
+- [x] T110 [P] Add Helmet middleware for security headers
+- [x] T111 Audit all endpoints for proper auth guards
 
 ### Observability
 
-- [ ] T112 [P] Add OpenTelemetry tracing in `services/user/src/infrastructure/tracing/`
-- [ ] T113 [P] Create Grafana dashboard config in `services/user/monitoring/`
-- [ ] T114 Add request ID middleware for distributed tracing
+- [x] T112 [P] Add OpenTelemetry tracing in `services/user/src/infrastructure/tracing/`
+- [x] T113 [P] Create Grafana dashboard config in `services/user/monitoring/`
+- [x] T114 Add request ID middleware for distributed tracing
 
 ### Documentation & DevEx
 
-- [ ] T115 [P] Generate Swagger/OpenAPI from decorators in NestJS
-- [ ] T116 [P] Create Dockerfile in `services/user/Dockerfile`
-- [ ] T117 [P] Add docker-compose service definitions
-- [ ] T118 Update quickstart.md with final setup instructions
-- [ ] T119 Run full test suite and verify coverage >80%
+- [x] T115 [P] Generate Swagger/OpenAPI from decorators in NestJS
+- [x] T116 [P] Create Dockerfile in `services/user/Dockerfile`
+- [x] T117 [P] Add docker-compose service definitions
+- [x] T118 Update quickstart.md with final setup instructions
+- [x] T119 Run full test suite and verify coverage >80%
 
 ### Cleanup Jobs
 
-- [ ] T120 [P] Implement expired refresh token cleanup job
-- [ ] T121 [P] Implement expired invite code cleanup job
-- [ ] T122 [P] Implement auth event retention cleanup job (90 days)
+- [x] T120 [P] Implement expired refresh token cleanup job
+- [x] T121 [P] Implement expired invite code cleanup job
+- [x] T122 [P] Implement auth event retention cleanup job (90 days)
 
 ---
 
