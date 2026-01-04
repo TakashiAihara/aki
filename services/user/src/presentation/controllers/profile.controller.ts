@@ -11,7 +11,7 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { JwtPayload } from '@akimi/shared';
+import { JwtPayload } from '@aki/shared';
 import { ProfileService } from '@application/profile/profile.service';
 import {
   ProfileResponseDto,

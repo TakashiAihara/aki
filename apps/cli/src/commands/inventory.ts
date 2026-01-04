@@ -11,12 +11,12 @@ import {
   warning,
   info,
 } from '../utils/format';
-import { CategoryDTO, StorageLocationDTO } from '@akimi/shared';
+import { CategoryDTO, StorageLocationDTO } from '@aki/shared';
 
 function requireAuth(): boolean {
   if (!ConfigService.isLoggedIn()) {
     error('ログインが必要です');
-    info('`akimi auth login` でログインしてください');
+    info('`aki auth login` でログインしてください');
     return false;
   }
   return true;

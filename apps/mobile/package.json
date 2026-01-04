@@ -1,5 +1,5 @@
 {
-  "name": "@akimi/mobile",
+  "name": "@aki/mobile",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@akimi/shared": "workspace:*",
+    "@aki/shared": "workspace:*",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@react-navigation/bottom-tabs": "^6.5.11",

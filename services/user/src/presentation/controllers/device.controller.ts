@@ -22,7 +22,7 @@ import {
   ApiBearerAuth,
   ApiQuery,
 } from '@nestjs/swagger';
-import { JwtPayload } from '@akimi/shared';
+import { JwtPayload } from '@aki/shared';
 import { DeviceFlowUseCase } from '@application/auth/device-flow.usecase';
 import {
   DeviceCodeRequestDto,

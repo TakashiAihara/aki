@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { apiService } from '../services/api';
 import { RootStackParamList } from '../navigation/types';
-import { InventoryItemDTO, ExpirationStatus, getExpirationStatus } from '@akimi/shared';
+import { InventoryItemDTO, ExpirationStatus, getExpirationStatus } from '@aki/shared';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 

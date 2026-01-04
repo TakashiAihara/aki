@@ -3,7 +3,7 @@ import {
   Inject,
   UnauthorizedException,
 } from '@nestjs/common';
-import { TokenPair } from '@akimi/shared';
+import { TokenPair } from '@aki/shared';
 import { UserRepository, USER_REPOSITORY } from '@domain/repositories/user.repository';
 import { JwtService } from '@infrastructure/auth/jwt.service';
 import { RefreshTokenService } from './refresh-token.service';

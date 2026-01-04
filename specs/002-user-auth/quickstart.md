@@ -41,7 +41,7 @@ Create `services/user/.env`:
 
 ```bash
 # Database
-DATABASE_URL=postgresql://akimi:akimi_dev@localhost:5432/akimi_user
+DATABASE_URL=postgresql://aki:aki_dev@localhost:5432/aki_user
 REDIS_URL=redis://localhost:6379
 
 # JWT Configuration
@@ -55,7 +55,7 @@ GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 
 # Apple Sign In
-APPLE_CLIENT_ID=com.akimi.app
+APPLE_CLIENT_ID=com.aki.app
 APPLE_TEAM_ID=YOUR_TEAM_ID
 APPLE_KEY_ID=YOUR_KEY_ID
 APPLE_PRIVATE_KEY_PATH=./keys/apple-auth-key.p8
@@ -94,7 +94,7 @@ cp services/user/keys/public.pem packages/shared/keys/
 4. Go to Credentials → Create OAuth 2.0 Client ID
 5. Add authorized redirect URIs:
    - `http://localhost:3001/auth/google/callback` (dev)
-   - `https://api.akimi.app/v1/user/auth/google/callback` (prod)
+   - `https://api.aki.app/v1/user/auth/google/callback` (prod)
 6. Copy Client ID and Secret to `.env`
 
 #### Apple Sign In

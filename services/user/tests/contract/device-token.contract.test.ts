@@ -37,7 +37,7 @@ describe('POST /auth/device/token (Contract)', () => {
     deviceCode = deviceCodeRepo.create({
       deviceCode: `test-device-${Date.now()}`,
       userCode: 'TEST-1234',
-      clientId: 'akimi-cli',
+      clientId: 'aki-cli',
       expiresAt,
       status: DeviceCodeStatus.PENDING,
       interval: 5,
@@ -60,7 +60,7 @@ describe('POST /auth/device/token (Contract)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code: deviceCode.deviceCode,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(400);
 
@@ -82,7 +82,7 @@ describe('POST /auth/device/token (Contract)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code: deviceCode.deviceCode,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(200);
 
@@ -108,7 +108,7 @@ describe('POST /auth/device/token (Contract)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code: deviceCode.deviceCode,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(400);
 
@@ -125,7 +125,7 @@ describe('POST /auth/device/token (Contract)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code: deviceCode.deviceCode,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(400);
 
@@ -138,7 +138,7 @@ describe('POST /auth/device/token (Contract)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code: 'nonexistent-code',
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(400);
 
@@ -152,7 +152,7 @@ describe('POST /auth/device/token (Contract)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code: deviceCode.deviceCode,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         });
 
       // Immediate second request (should be rate limited)
@@ -161,7 +161,7 @@ describe('POST /auth/device/token (Contract)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code: deviceCode.deviceCode,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(400);
 
@@ -174,7 +174,7 @@ describe('POST /auth/device/token (Contract)', () => {
         .send({
           grant_type: 'authorization_code',
           device_code: deviceCode.deviceCode,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(400);
 
@@ -189,7 +189,7 @@ describe('POST /auth/device/token (Contract)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code: deviceCode.deviceCode,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(400);
 

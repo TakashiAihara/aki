@@ -73,9 +73,9 @@ export class DeviceFlowUseCase {
     private readonly userRepository: UserRepository,
   ) {
     this.validClientIds = (
-      this.configService.get<string>('DEVICE_FLOW_CLIENT_IDS') || 'akimi-cli'
+      this.configService.get<string>('DEVICE_FLOW_CLIENT_IDS') || 'aki-cli'
     ).split(',');
-    this.appUrl = this.configService.get<string>('APP_URL') || 'https://akimi.app';
+    this.appUrl = this.configService.get<string>('APP_URL') || 'https://aki.app';
   }
 
   /**

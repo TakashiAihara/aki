@@ -1,14 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-import { InventoryItemDTO, SyncOperation } from '@akimi/shared';
+import { InventoryItemDTO, SyncOperation } from '@aki/shared';
 
 const KEYS = {
-  ACCESS_TOKEN: 'akimi_access_token',
-  REFRESH_TOKEN: 'akimi_refresh_token',
-  USER_EMAIL: 'akimi_user_email',
-  CACHED_INVENTORY: 'akimi_cached_inventory',
-  PENDING_SYNC: 'akimi_pending_sync',
-  LAST_SYNC: 'akimi_last_sync',
+  ACCESS_TOKEN: 'aki_access_token',
+  REFRESH_TOKEN: 'aki_refresh_token',
+  USER_EMAIL: 'aki_user_email',
+  CACHED_INVENTORY: 'aki_cached_inventory',
+  PENDING_SYNC: 'aki_pending_sync',
+  LAST_SYNC: 'aki_last_sync',
 };
 
 // Secure storage for tokens

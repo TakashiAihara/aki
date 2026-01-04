@@ -5,7 +5,7 @@
 
 ## Summary
 
-Implement OAuth 2.0 authentication service supporting Google and Apple Sign In, with JWT token issuance, user profile management, household membership, and GDPR-compliant account deletion. This service is the P0 (highest priority) foundation that all other Akimi microservices depend on.
+Implement OAuth 2.0 authentication service supporting Google and Apple Sign In, with JWT token issuance, user profile management, household membership, and GDPR-compliant account deletion. This service is the P0 (highest priority) foundation that all other Aki microservices depend on.
 
 ## Technical Context
 

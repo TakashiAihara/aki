@@ -6,7 +6,7 @@ import {
   CreateInventoryItemDTO,
   UpdateInventoryItemDTO,
   InventoryItemFilter,
-} from '@akimi/shared';
+} from '@aki/shared';
 
 export function useInventory(filter?: InventoryItemFilter) {
   return useQuery({

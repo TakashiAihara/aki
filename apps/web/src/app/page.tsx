@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { InventoryList } from '@/components/inventory/InventoryList';
 import { InventoryForm } from '@/components/inventory/InventoryForm';
 import { Button } from '@/components/ui/Button';
-import { InventoryItemDTO } from '@akimi/shared';
+import { InventoryItemDTO } from '@aki/shared';
 import { Plus } from 'lucide-react';
 
 export default function HomePage() {

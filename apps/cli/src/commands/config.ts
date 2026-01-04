@@ -13,7 +13,7 @@ export function createConfigCommand(): Command {
     .action(() => {
       const settings = ConfigService.getAll();
 
-      console.log('\n' + chalk.bold.cyan('Akimi CLI 設定'));
+      console.log('\n' + chalk.bold.cyan('Aki CLI 設定'));
       console.log(chalk.gray('─'.repeat(40)));
       console.log(`${chalk.bold('API URL:')}     ${settings.apiUrl || 'http://localhost:3002'}`);
       console.log(`${chalk.bold('ログイン:')}   ${settings.accessToken ? chalk.green('✓ ログイン中') : chalk.gray('未ログイン')}`);

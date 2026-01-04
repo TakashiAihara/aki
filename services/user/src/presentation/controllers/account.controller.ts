@@ -20,7 +20,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import { JwtPayload } from '@akimi/shared';
+import { JwtPayload } from '@aki/shared';
 import { AccountDeletionService } from '@application/account/account-deletion.service';
 import {
   DeletionRequestResponseDto,

@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import Table from 'cli-table3';
-import { InventoryItemDTO, ExpirationStatus, getExpirationStatus } from '@akimi/shared';
+import { InventoryItemDTO, ExpirationStatus, getExpirationStatus } from '@aki/shared';
 
 export function formatDate(dateString: string | null): string {
   if (!dateString) return '-';

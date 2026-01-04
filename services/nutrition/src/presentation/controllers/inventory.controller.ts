@@ -18,7 +18,7 @@ import {
   ApiBearerAuth,
   ApiParam,
 } from '@nestjs/swagger';
-import { JwtPayload } from '@akimi/shared';
+import { JwtPayload } from '@aki/shared';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { CreateInventoryItemDto } from '../dto/create-inventory-item.dto';
 import { UpdateInventoryItemDto } from '../dto/update-inventory-item.dto';

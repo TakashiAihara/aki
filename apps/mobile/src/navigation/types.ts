@@ -1,4 +1,4 @@
-import { InventoryItemDTO } from '@akimi/shared';
+import { InventoryItemDTO } from '@aki/shared';
 
 export type RootStackParamList = {
   Main: undefined;

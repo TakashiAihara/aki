@@ -250,11 +250,11 @@ const useFilterStore = create((set) => ({
 
 **CLI Command Structure**:
 ```bash
-akimi-inventory list [--category <cat>] [--search <term>]
-akimi-inventory add [--interactive]
-akimi-inventory update <id> --quantity <num>
-akimi-inventory delete <id>
-akimi-inventory sync  # Manual sync trigger
+aki-inventory list [--category <cat>] [--search <term>]
+aki-inventory add [--interactive]
+aki-inventory update <id> --quantity <num>
+aki-inventory delete <id>
+aki-inventory sync  # Manual sync trigger
 ```
 
 **Alternatives Considered**:
@@ -263,7 +263,7 @@ akimi-inventory sync  # Manual sync trigger
 - **Prompts**: Alternative to Inquirer, less feature-rich
 
 **Configuration**:
-- API endpoint stored in `~/.akimi/config.json`
+- API endpoint stored in `~/.aki/config.json`
 - JWT token cached after login command
 
 **References**:

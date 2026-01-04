@@ -12,7 +12,7 @@ import {
   InventoryItemDTO,
   CreateInventoryItemDTO,
   UpdateInventoryItemDTO,
-} from '@akimi/shared';
+} from '@aki/shared';
 
 export interface SyncCommand {
   request: SyncRequest;

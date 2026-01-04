@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useInventory, useDeleteInventoryItem } from '@/hooks/useInventory';
-import { InventoryItemDTO, ExpirationStatus, getExpirationStatus } from '@akimi/shared';
+import { InventoryItemDTO, ExpirationStatus, getExpirationStatus } from '@aki/shared';
 import { formatDate, cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Trash2, Edit, AlertTriangle, Package } from 'lucide-react';

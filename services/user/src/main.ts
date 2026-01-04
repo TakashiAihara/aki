@@ -45,7 +45,7 @@ async function bootstrap() {
 
   // Swagger documentation
   const config = new DocumentBuilder()
-    .setTitle('Akimi User Authentication API')
+    .setTitle('Aki User Authentication API')
     .setDescription(
       'OAuth 2.0 authentication service with Google and Apple Sign In. ' +
         'Provides user authentication, profile management, household management, ' +
@@ -67,7 +67,7 @@ async function bootstrap() {
     .addTag('profile', 'User profile management')
     .addTag('household', 'Household management')
     .addTag('account', 'Account management (deletion)')
-    .setContact('Akimi Team', 'https://akimi.app', 'support@akimi.app')
+    .setContact('Aki Team', 'https://aki.app', 'support@aki.app')
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
     .build();
 
@@ -91,7 +91,7 @@ async function bootstrap() {
 
   console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
-║                    Akimi User Service                         ║
+║                    Aki User Service                         ║
 ╠═══════════════════════════════════════════════════════════════╣
 ║  Status:      Running                                         ║
 ║  Port:        ${String(port).padEnd(49)}║

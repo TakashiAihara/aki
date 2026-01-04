@@ -4,7 +4,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { UserProfile, OAuthLinkInfo, ProfileUpdateRequest } from '@akimi/shared';
+import { UserProfile, OAuthLinkInfo, ProfileUpdateRequest } from '@aki/shared';
 import { UserRepository, USER_REPOSITORY } from '@domain/repositories/user.repository';
 import {
   OAuthLinkRepository,

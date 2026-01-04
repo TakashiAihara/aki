@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Akimi Nutrition Service - Inventory API
+  title: Aki Nutrition Service - Inventory API
   description: |
     家庭用在庫管理 REST API
 
@@ -8,11 +8,11 @@ info:
     Supports personal and shared household inventories with offline sync.
   version: 1.0.0
   contact:
-    name: Akimi Development Team
+    name: Aki Development Team
 servers:
-  - url: https://api.akimi.health/v1
+  - url: https://api.aki.health/v1
     description: Production
-  - url: https://staging-api.akimi.health/v1
+  - url: https://staging-api.aki.health/v1
     description: Staging
   - url: http://localhost:3000/v1
     description: Local Development

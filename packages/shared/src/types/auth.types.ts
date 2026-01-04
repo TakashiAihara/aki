@@ -1,5 +1,5 @@
 /**
- * JWT Payload structure for Akimi access tokens
+ * JWT Payload structure for Aki access tokens
  */
 export interface JwtPayload {
   /** User UUID (subject) */

@@ -69,7 +69,7 @@ describe('Device Flow (Integration)', () => {
       // Step 1: Request device code
       const deviceCodeResponse = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       const { device_code, user_code } = deviceCodeResponse.body;
@@ -82,7 +82,7 @@ describe('Device Flow (Integration)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(400);
 
@@ -110,7 +110,7 @@ describe('Device Flow (Integration)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(200);
 
@@ -126,7 +126,7 @@ describe('Device Flow (Integration)', () => {
       // Step 1: Request device code
       const deviceCodeResponse = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       const { device_code, user_code } = deviceCodeResponse.body;
@@ -151,7 +151,7 @@ describe('Device Flow (Integration)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(400);
 
@@ -164,7 +164,7 @@ describe('Device Flow (Integration)', () => {
       // Create device code
       const deviceCodeResponse = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       const { device_code } = deviceCodeResponse.body;
@@ -184,7 +184,7 @@ describe('Device Flow (Integration)', () => {
         .send({
           grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
           device_code,
-          client_id: 'akimi-cli',
+          client_id: 'aki-cli',
         })
         .expect(400);
 
@@ -197,7 +197,7 @@ describe('Device Flow (Integration)', () => {
       // Create device code
       const deviceCodeResponse = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       const { user_code } = deviceCodeResponse.body;
@@ -209,7 +209,7 @@ describe('Device Flow (Integration)', () => {
         .expect(200);
 
       expect(lookupResponse.body).toMatchObject({
-        client_id: 'akimi-cli',
+        client_id: 'aki-cli',
         user_code,
         status: 'pending',
       });
@@ -227,7 +227,7 @@ describe('Device Flow (Integration)', () => {
     it('should return human-readable verification URI', async () => {
       const deviceCodeResponse = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       // Verification URI should be user-friendly

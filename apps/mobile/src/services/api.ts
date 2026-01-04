@@ -12,7 +12,7 @@ import {
   SyncOperationType,
   SyncRequest,
   SyncResponse,
-} from '@akimi/shared';
+} from '@aki/shared';
 
 const API_URL = Constants.expoConfig?.extra?.apiUrl || 'http://localhost:3002';
 

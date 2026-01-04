@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useCategories, useStorageLocations, useCreateInventoryItem, useUpdateInventoryItem } from '@/hooks/useInventory';
-import { InventoryItemDTO, CreateInventoryItemDTO } from '@akimi/shared';
+import { InventoryItemDTO, CreateInventoryItemDTO } from '@aki/shared';
 import { Button } from '@/components/ui/Button';
 import { X } from 'lucide-react';
 

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as jose from 'jose';
 import * as fs from 'fs';
 import * as crypto from 'crypto';
-import { JwtPayload, TokenPair } from '@akimi/shared';
+import { JwtPayload, TokenPair } from '@aki/shared';
 
 @Injectable()
 export class JwtService {

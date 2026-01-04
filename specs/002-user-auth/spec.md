@@ -9,7 +9,7 @@
 
 ### User Story 1 - Initial Sign-In with Google (Priority: P1)
 
-A new user opens the Akimi app on any platform and signs in using their existing Google account. Upon successful authentication, they are issued a JWT token and can immediately access Akimi services.
+A new user opens the Aki app on any platform and signs in using their existing Google account. Upon successful authentication, they are issued a JWT token and can immediately access Aki services.
 
 **Why this priority**: This is the foundation of the entire system. Without authentication, no other features can be accessed. Google OAuth covers the widest user base (Android, Web, iOS).
 
@@ -17,15 +17,15 @@ A new user opens the Akimi app on any platform and signs in using their existing
 
 **Acceptance Scenarios**:
 
-1. **Given** a user with a Google account has never used Akimi, **When** they tap "Sign in with Google" and authorize access, **Then** a new user account is created, a JWT is issued, and they are redirected to the home screen.
-2. **Given** a user with an existing Akimi account linked to Google, **When** they sign in with Google, **Then** they receive a valid JWT and access their existing profile.
+1. **Given** a user with a Google account has never used Aki, **When** they tap "Sign in with Google" and authorize access, **Then** a new user account is created, a JWT is issued, and they are redirected to the home screen.
+2. **Given** a user with an existing Aki account linked to Google, **When** they sign in with Google, **Then** they receive a valid JWT and access their existing profile.
 3. **Given** a user attempts Google sign-in, **When** the OAuth flow fails (user denies, network error), **Then** an appropriate error message is displayed and no account/session is created.
 
 ---
 
 ### User Story 2 - Initial Sign-In with Apple (Priority: P1)
 
-An iOS user opens the Akimi app and signs in using Apple Sign In. Upon successful authentication, they receive a JWT token with full access to their account.
+An iOS user opens the Aki app and signs in using Apple Sign In. Upon successful authentication, they receive a JWT token with full access to their account.
 
 **Why this priority**: Apple Sign In is required for iOS App Store compliance when offering social sign-in. Critical for iOS user adoption.
 
@@ -33,8 +33,8 @@ An iOS user opens the Akimi app and signs in using Apple Sign In. Upon successfu
 
 **Acceptance Scenarios**:
 
-1. **Given** a user with an Apple ID has never used Akimi on iOS, **When** they tap "Sign in with Apple" and authenticate via Face ID/Touch ID/passcode, **Then** a new user account is created (using Apple's provided email or private relay), a JWT is issued, and they access the home screen.
-2. **Given** an existing Akimi user linked to Apple ID, **When** they sign in with Apple, **Then** they receive a valid JWT and access their existing profile.
+1. **Given** a user with an Apple ID has never used Aki on iOS, **When** they tap "Sign in with Apple" and authenticate via Face ID/Touch ID/passcode, **Then** a new user account is created (using Apple's provided email or private relay), a JWT is issued, and they access the home screen.
+2. **Given** an existing Aki user linked to Apple ID, **When** they sign in with Apple, **Then** they receive a valid JWT and access their existing profile.
 3. **Given** a user uses "Hide My Email" option in Apple Sign In, **When** account is created, **Then** the system uses Apple's private relay email address correctly.
 
 ---
@@ -90,7 +90,7 @@ A user creates or joins a household to share data (inventory, tasks) with family
 
 ### User Story 6 - Account Deletion (GDPR Compliance) (Priority: P2)
 
-A user decides to delete their Akimi account. All personal data is permanently deleted, and their OAuth link is revoked. They can re-register with the same OAuth provider later.
+A user decides to delete their Aki account. All personal data is permanently deleted, and their OAuth link is revoked. They can re-register with the same OAuth provider later.
 
 **Why this priority**: GDPR compliance is legally required. Must be available before public launch but not blocking core auth development.
 
@@ -107,7 +107,7 @@ A user decides to delete their Akimi account. All personal data is permanently d
 
 ### User Story 7 - CLI Authentication (Priority: P3)
 
-A developer or power user authenticates to Akimi via the command-line interface using device authorization flow (OAuth 2.0 Device Flow).
+A developer or power user authenticates to Aki via the command-line interface using device authorization flow (OAuth 2.0 Device Flow).
 
 **Why this priority**: CLI support is valuable for developers and automation but has a smaller user base than mobile/web.
 
@@ -115,9 +115,9 @@ A developer or power user authenticates to Akimi via the command-line interface 
 
 **Acceptance Scenarios**:
 
-1. **Given** a user runs `akimi auth login`, **When** the CLI initiates device flow, **Then** a URL and user code are displayed for browser authorization.
+1. **Given** a user runs `aki auth login`, **When** the CLI initiates device flow, **Then** a URL and user code are displayed for browser authorization.
 2. **Given** a user has authorized the device in their browser, **When** CLI polls for completion, **Then** a JWT is issued and securely stored in the local credential store.
-3. **Given** a user runs `akimi auth logout`, **When** executed, **Then** the local JWT is deleted and the session is revoked server-side.
+3. **Given** a user runs `aki auth logout`, **When** executed, **Then** the local JWT is deleted and the session is revoked server-side.
 
 ---
 
@@ -219,7 +219,7 @@ A developer or power user authenticates to Akimi via the command-line interface 
 
 - OAuth providers (Google, Apple) maintain 99.9%+ uptime.
 - Users have access to a modern browser for OAuth authorization (including CLI device flow).
-- Email addresses from OAuth providers are verified by the provider before being passed to Akimi.
+- Email addresses from OAuth providers are verified by the provider before being passed to Aki.
 - Apple's private relay email system remains stable for account identification.
 - JWT secret rotation will be managed via infrastructure (not application code).
 - Rate limiting will be implemented at the API Gateway level, not within the User Service.

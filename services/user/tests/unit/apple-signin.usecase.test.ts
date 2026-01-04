@@ -57,7 +57,7 @@ describe('AppleSignInUseCase', () => {
 
   const mockAppleTokenPayload = {
     iss: 'https://appleid.apple.com',
-    aud: 'com.akimi.app',
+    aud: 'com.aki.app',
     exp: Math.floor(Date.now() / 1000) + 3600,
     iat: Math.floor(Date.now() / 1000),
     sub: '000000.abcdef123456.7890',

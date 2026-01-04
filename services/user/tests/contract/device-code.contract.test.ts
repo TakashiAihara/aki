@@ -36,7 +36,7 @@ describe('POST /auth/device/code (Contract)', () => {
     it('should return device code and user code', async () => {
       const response = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       expect(response.body).toMatchObject({
@@ -52,7 +52,7 @@ describe('POST /auth/device/code (Contract)', () => {
     it('should return user code in XXXX-XXXX format', async () => {
       const response = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       expect(response.body.user_code).toMatch(/^[A-Z0-9]{4}-[A-Z0-9]{4}$/);
@@ -61,7 +61,7 @@ describe('POST /auth/device/code (Contract)', () => {
     it('should return 15-minute expiration', async () => {
       const response = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       // 15 minutes = 900 seconds
@@ -71,7 +71,7 @@ describe('POST /auth/device/code (Contract)', () => {
     it('should return 5-second polling interval', async () => {
       const response = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       expect(response.body.interval).toBe(5);
@@ -80,7 +80,7 @@ describe('POST /auth/device/code (Contract)', () => {
     it('should include complete verification URI with user code', async () => {
       const response = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       expect(response.body.verification_uri_complete).toContain(response.body.user_code);
@@ -109,7 +109,7 @@ describe('POST /auth/device/code (Contract)', () => {
     it('should return proper OAuth 2.0 Device Authorization response shape', async () => {
       const response = await request(app.getHttpServer())
         .post('/auth/device/code')
-        .send({ client_id: 'akimi-cli' })
+        .send({ client_id: 'aki-cli' })
         .expect(200);
 
       // Per RFC 8628

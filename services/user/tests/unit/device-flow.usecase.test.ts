@@ -23,7 +23,7 @@ describe('DeviceFlowUseCase', () => {
   let mockAuthEventService: Partial<AuthEventService>;
   let mockConfigService: Partial<ConfigService>;
 
-  const validClientIds = ['akimi-cli'];
+  const validClientIds = ['aki-cli'];
 
   beforeEach(async () => {
     mockDeviceCodeRepository = {
@@ -51,8 +51,8 @@ describe('DeviceFlowUseCase', () => {
 
     mockConfigService = {
       get: jest.fn().mockImplementation((key: string) => {
-        if (key === 'APP_URL') return 'https://akimi.app';
-        if (key === 'DEVICE_FLOW_CLIENT_IDS') return 'akimi-cli';
+        if (key === 'APP_URL') return 'https://aki.app';
+        if (key === 'DEVICE_FLOW_CLIENT_IDS') return 'aki-cli';
         return undefined;
       }),
     };
@@ -97,7 +97,7 @@ describe('DeviceFlowUseCase', () => {
         Promise.resolve(entity),
       );
 
-      const result = await useCase.requestDeviceCode('akimi-cli');
+      const result = await useCase.requestDeviceCode('aki-cli');
 
       expect(result.device_code).toBeDefined();
       expect(result.user_code).toMatch(/^[A-Z0-9]{4}-[A-Z0-9]{4}$/);
@@ -121,9 +121,9 @@ describe('DeviceFlowUseCase', () => {
         Promise.resolve(entity),
       );
 
-      const result = await useCase.requestDeviceCode('akimi-cli');
+      const result = await useCase.requestDeviceCode('aki-cli');
 
-      expect(result.verification_uri).toBe('https://akimi.app/auth/device');
+      expect(result.verification_uri).toBe('https://aki.app/auth/device');
       expect(result.verification_uri_complete).toContain(result.user_code);
     });
   });
@@ -133,7 +133,7 @@ describe('DeviceFlowUseCase', () => {
       id: '1',
       deviceCode: 'test-device-code',
       userCode: 'TEST-1234',
-      clientId: 'akimi-cli',
+      clientId: 'aki-cli',
       status: DeviceCodeStatus.PENDING,
       expiresAt: new Date(Date.now() + 15 * 60 * 1000),
       interval: 5,
@@ -144,7 +144,7 @@ describe('DeviceFlowUseCase', () => {
       (mockDeviceCodeRepository.findOne as jest.Mock).mockResolvedValue({ ...mockDeviceCode });
 
       await expect(
-        useCase.pollForToken('test-device-code', 'akimi-cli'),
+        useCase.pollForToken('test-device-code', 'aki-cli'),
       ).rejects.toMatchObject({
         response: { error: 'authorization_pending' },
       });
@@ -159,7 +159,7 @@ describe('DeviceFlowUseCase', () => {
       };
       (mockDeviceCodeRepository.findOne as jest.Mock).mockResolvedValue(authorizedCode);
 
-      const result = await useCase.pollForToken('test-device-code', 'akimi-cli');
+      const result = await useCase.pollForToken('test-device-code', 'aki-cli');
 
       expect(result.access_token).toBeDefined();
       expect(result.token_type).toBe('Bearer');
@@ -175,7 +175,7 @@ describe('DeviceFlowUseCase', () => {
       (mockDeviceCodeRepository.findOne as jest.Mock).mockResolvedValue(expiredCode);
 
       await expect(
-        useCase.pollForToken('test-device-code', 'akimi-cli'),
+        useCase.pollForToken('test-device-code', 'aki-cli'),
       ).rejects.toMatchObject({
         response: { error: 'expired_token' },
       });
@@ -190,7 +190,7 @@ describe('DeviceFlowUseCase', () => {
       (mockDeviceCodeRepository.findOne as jest.Mock).mockResolvedValue(deniedCode);
 
       await expect(
-        useCase.pollForToken('test-device-code', 'akimi-cli'),
+        useCase.pollForToken('test-device-code', 'aki-cli'),
       ).rejects.toMatchObject({
         response: { error: 'access_denied' },
       });
@@ -204,7 +204,7 @@ describe('DeviceFlowUseCase', () => {
       (mockDeviceCodeRepository.findOne as jest.Mock).mockResolvedValue(recentlyPolled);
 
       await expect(
-        useCase.pollForToken('test-device-code', 'akimi-cli'),
+        useCase.pollForToken('test-device-code', 'aki-cli'),
       ).rejects.toMatchObject({
         response: { error: 'slow_down' },
       });
@@ -214,7 +214,7 @@ describe('DeviceFlowUseCase', () => {
       (mockDeviceCodeRepository.findOne as jest.Mock).mockResolvedValue(null);
 
       await expect(
-        useCase.pollForToken('nonexistent', 'akimi-cli'),
+        useCase.pollForToken('nonexistent', 'aki-cli'),
       ).rejects.toMatchObject({
         response: { error: 'invalid_grant' },
       });
@@ -226,7 +226,7 @@ describe('DeviceFlowUseCase', () => {
       id: '1',
       deviceCode: 'test-device-code',
       userCode: 'TEST-1234',
-      clientId: 'akimi-cli',
+      clientId: 'aki-cli',
       status: DeviceCodeStatus.PENDING,
       expiresAt: new Date(Date.now() + 15 * 60 * 1000),
     };
@@ -298,7 +298,7 @@ describe('DeviceFlowUseCase', () => {
         Promise.resolve(entity),
       );
 
-      const result = await useCase.requestDeviceCode('akimi-cli');
+      const result = await useCase.requestDeviceCode('aki-cli');
 
       // Format: XXXX-XXXX (8 chars + hyphen)
       expect(result.user_code).toMatch(/^[A-Z0-9]{4}-[A-Z0-9]{4}$/);
@@ -317,7 +317,7 @@ describe('DeviceFlowUseCase', () => {
 
       // Generate multiple codes to check for ambiguous chars
       for (let i = 0; i < 10; i++) {
-        const result = await useCase.requestDeviceCode('akimi-cli');
+        const result = await useCase.requestDeviceCode('aki-cli');
         const code = result.user_code.replace('-', '');
 
         // Should not contain 0, O, 1, I, L (ambiguous)

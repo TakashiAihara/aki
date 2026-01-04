@@ -9,9 +9,9 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 export function getCorsConfig(env: string): CorsOptions {
   // Production origins
   const productionOrigins = [
-    'https://akimi.app',
-    'https://www.akimi.app',
-    'https://api.akimi.app',
+    'https://aki.app',
+    'https://www.aki.app',
+    'https://api.aki.app',
   ];
 
   // Development origins

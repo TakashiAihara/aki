@@ -41,7 +41,7 @@ async function bootstrap() {
 
   // Swagger documentation
   const config = new DocumentBuilder()
-    .setTitle('Akimi Nutrition API')
+    .setTitle('Aki Nutrition API')
     .setDescription(
       'Household Inventory Management API. ' +
         'Provides CRUD operations for food and household items, ' +
@@ -62,7 +62,7 @@ async function bootstrap() {
     .addTag('storage-locations', 'Storage location reference data')
     .addTag('sync', 'Offline synchronization')
     .addTag('health', 'Health check endpoints')
-    .setContact('Akimi Team', 'https://akimi.app', 'support@akimi.app')
+    .setContact('Aki Team', 'https://aki.app', 'support@aki.app')
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
     .build();
 
@@ -86,7 +86,7 @@ async function bootstrap() {
 
   console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
-║                  Akimi Nutrition Service                      ║
+║                  Aki Nutrition Service                      ║
 ╠═══════════════════════════════════════════════════════════════╣
 ║  Status:      Running                                         ║
 ║  Port:        ${String(port).padEnd(49)}║

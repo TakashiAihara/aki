@@ -3,7 +3,7 @@ import { Providers } from './providers';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Akimi - 家庭用在庫管理',
+  title: 'Aki - 家庭用在庫管理',
   description: '食品や日用品の在庫を簡単に管理できるアプリ',
 };
 
@@ -22,7 +22,7 @@ export default function RootLayout({
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                   <div className="flex items-center">
-                    <span className="text-2xl font-bold text-primary-600">Akimi</span>
+                    <span className="text-2xl font-bold text-primary-600">Aki</span>
                     <span className="ml-2 text-sm text-gray-500">在庫管理</span>
                   </div>
                   <nav className="flex items-center gap-4">
@@ -54,7 +54,7 @@ export default function RootLayout({
             <footer className="bg-white border-t border-gray-200 py-4">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <p className="text-center text-sm text-gray-500">
-                  © 2024 Akimi. All rights reserved.
+                  © 2024 Aki. All rights reserved.
                 </p>
               </div>
             </footer>

@@ -15,7 +15,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import { JwtPayload } from '@akimi/shared';
+import { JwtPayload } from '@aki/shared';
 import { TokenRefreshUseCase } from '@application/auth/token-refresh.usecase';
 import { LogoutUseCase } from '@application/auth/logout.usecase';
 import {

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { apiService } from '../services/api';
-import { InventoryItemDTO } from '@akimi/shared';
+import { InventoryItemDTO } from '@aki/shared';
 
 const DAYS_OPTIONS = [
   { label: '1日', value: 1 },

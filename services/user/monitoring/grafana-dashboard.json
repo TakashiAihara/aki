@@ -2,7 +2,7 @@
   "annotations": {
     "list": []
   },
-  "description": "Akimi User Service Monitoring Dashboard",
+  "description": "Aki User Service Monitoring Dashboard",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -175,7 +175,7 @@
   "refresh": "10s",
   "schemaVersion": 38,
   "style": "dark",
-  "tags": ["akimi", "user-service", "authentication"],
+  "tags": ["aki", "user-service", "authentication"],
   "templating": {
     "list": []
   },
@@ -185,8 +185,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Akimi User Service",
-  "uid": "akimi-user-service",
+  "title": "Aki User Service",
+  "uid": "aki-user-service",
   "version": 1,
   "weekStart": ""
 }
