@@ -40,7 +40,7 @@ export class HouseholdRepositoryImpl implements HouseholdRepository {
   }
 
   async update(id: string, data: Partial<Household>): Promise<Household> {
-    await this.householdRepo.update(id, data);
+    await this.householdRepo.update(id, data as Record<string, unknown>);
     const updated = await this.findById(id);
     if (!updated) {
       throw new Error(`Household with id ${id} not found`);
@@ -77,7 +77,7 @@ export class HouseholdRepositoryImpl implements HouseholdRepository {
   }
 
   async updateMember(id: string, data: Partial<HouseholdMember>): Promise<HouseholdMember> {
-    await this.memberRepo.update(id, data);
+    await this.memberRepo.update(id, data as Record<string, unknown>);
     const updated = await this.memberRepo.findOne({ where: { id } });
     if (!updated) {
       throw new Error(`HouseholdMember with id ${id} not found`);
@@ -132,7 +132,7 @@ export class HouseholdRepositoryImpl implements HouseholdRepository {
   }
 
   async updateInvite(id: string, data: Partial<HouseholdInvite>): Promise<HouseholdInvite> {
-    await this.inviteRepo.update(id, data);
+    await this.inviteRepo.update(id, data as Record<string, unknown>);
     const updated = await this.inviteRepo.findOne({ where: { id } });
     if (!updated) {
       throw new Error(`HouseholdInvite with id ${id} not found`);

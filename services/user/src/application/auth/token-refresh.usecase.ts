@@ -41,7 +41,7 @@ export class TokenRefreshUseCase {
     }
 
     // Check for pending deletion
-    if (user.deletionRequestedAt) {
+    if (user.deletionScheduledAt) {
       throw new UnauthorizedException(
         'Account is pending deletion. Token refresh is not allowed.',
       );

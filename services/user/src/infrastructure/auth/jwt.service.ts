@@ -10,11 +10,9 @@ export class JwtService {
   private privateKey!: jose.KeyLike;
   private publicKey!: jose.KeyLike;
   private readonly accessTokenExpiry: string;
-  private readonly refreshTokenExpiry: string;
 
   constructor(private readonly configService: ConfigService) {
     this.accessTokenExpiry = this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRY', '15m');
-    this.refreshTokenExpiry = this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRY', '7d');
   }
 
   async onModuleInit(): Promise<void> {

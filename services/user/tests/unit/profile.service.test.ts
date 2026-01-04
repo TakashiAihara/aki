@@ -27,7 +27,7 @@ describe('ProfileService', () => {
     },
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01'),
-    deletionRequestedAt: null,
+    deletionScheduledAt: null,
     oauthLinks: [],
     refreshTokens: [],
   };

@@ -73,7 +73,7 @@ export class GoogleOAuthUseCase {
       }
 
       // Check for pending deletion
-      if (user.deletionRequestedAt) {
+      if (user.deletionScheduledAt) {
         throw new UnauthorizedException(
           'Account is pending deletion. Login is not allowed.',
         );
@@ -86,7 +86,7 @@ export class GoogleOAuthUseCase {
         // Link Google to existing account
         user = existingUser;
 
-        if (user.deletionRequestedAt) {
+        if (user.deletionScheduledAt) {
           throw new UnauthorizedException(
             'Account is pending deletion. Login is not allowed.',
           );
@@ -96,7 +96,7 @@ export class GoogleOAuthUseCase {
           userId: user.id,
           provider: OAuthProvider.GOOGLE,
           providerUserId: profile.id,
-          providerEmail: profile.email,
+          email: profile.email,
         });
         await this.oauthLinkRepository.save(link);
 
@@ -119,7 +119,7 @@ export class GoogleOAuthUseCase {
           userId: user.id,
           provider: OAuthProvider.GOOGLE,
           providerUserId: profile.id,
-          providerEmail: profile.email,
+          email: profile.email,
         });
         await this.oauthLinkRepository.save(link);
       }

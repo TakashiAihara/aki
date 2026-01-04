@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtPayload } from '@aki/shared';
 import { RefreshTokenService } from './refresh-token.service';
 import { AuthEventService } from './auth-event.service';

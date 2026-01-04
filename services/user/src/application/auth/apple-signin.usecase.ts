@@ -2,7 +2,6 @@ import {
   Injectable,
   Inject,
   UnauthorizedException,
-  BadRequestException,
 } from '@nestjs/common';
 import { TokenPair } from '@aki/shared';
 import { UserRepository, USER_REPOSITORY } from '@domain/repositories/user.repository';
@@ -94,7 +93,7 @@ export class AppleSignInUseCase {
       }
 
       // Check for pending deletion
-      if (user.deletionRequestedAt) {
+      if (user.deletionScheduledAt) {
         throw new UnauthorizedException(
           'Account is pending deletion. Login is not allowed.',
         );
@@ -107,7 +106,7 @@ export class AppleSignInUseCase {
         // Link Apple to existing account
         user = existingUser;
 
-        if (user.deletionRequestedAt) {
+        if (user.deletionScheduledAt) {
           throw new UnauthorizedException(
             'Account is pending deletion. Login is not allowed.',
           );
@@ -117,7 +116,7 @@ export class AppleSignInUseCase {
           userId: user.id,
           provider: OAuthProvider.APPLE,
           providerUserId: applePayload.sub,
-          providerEmail: applePayload.email,
+          email: applePayload.email,
         });
         await this.oauthLinkRepository.save(link);
 
@@ -141,7 +140,7 @@ export class AppleSignInUseCase {
           userId: user.id,
           provider: OAuthProvider.APPLE,
           providerUserId: applePayload.sub,
-          providerEmail: applePayload.email,
+          email: applePayload.email,
         });
         await this.oauthLinkRepository.save(link);
       }

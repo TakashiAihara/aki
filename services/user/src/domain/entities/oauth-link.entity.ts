@@ -38,6 +38,15 @@ export class OAuthLink {
   @Column({ type: 'varchar', length: 255 })
   email!: string;
 
+  // Alias for email (used in some OAuth flows)
+  get providerEmail(): string {
+    return this.email;
+  }
+
+  set providerEmail(value: string) {
+    this.email = value;
+  }
+
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt!: Date;
 

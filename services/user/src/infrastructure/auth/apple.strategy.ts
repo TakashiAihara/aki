@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-apple';
 import { ConfigService } from '@nestjs/config';
+
+// passport-apple has no type definitions
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const ApplePassportStrategy = require('passport-apple');
 
 export interface AppleProfile {
   id: string;
@@ -10,8 +14,8 @@ export interface AppleProfile {
 }
 
 @Injectable()
-export class AppleStrategy extends PassportStrategy(Strategy, 'apple') {
-  constructor(private readonly configService: ConfigService) {
+export class AppleStrategy extends PassportStrategy(ApplePassportStrategy, 'apple') {
+  constructor(configService: ConfigService) {
     super({
       clientID: configService.get<string>('APPLE_CLIENT_ID'),
       teamID: configService.get<string>('APPLE_TEAM_ID'),
@@ -30,10 +34,10 @@ export class AppleStrategy extends PassportStrategy(Strategy, 'apple') {
   }
 
   async validate(
-    req: Express.Request,
-    accessToken: string,
-    refreshToken: string,
-    idToken: string,
+    req: any,
+    _accessToken: string,
+    _refreshToken: string,
+    _idToken: string,
     profile: any,
     done: (error: any, user?: any) => void,
   ): Promise<void> {

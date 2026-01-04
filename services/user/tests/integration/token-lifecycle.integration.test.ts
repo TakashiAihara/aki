@@ -164,7 +164,7 @@ describe('Token Lifecycle Integration Tests', () => {
         userId: user.id,
         tokenHash,
         expiresAt: new Date(Date.now() - 1000), // Expired
-        ipAddress: '127.0.0.1',
+        deviceInfo: { ipAddress: '127.0.0.1' },
       });
       await refreshTokenRepository.save(expiredToken);
 
@@ -302,8 +302,8 @@ describe('Token Lifecycle Integration Tests', () => {
       const activeTokens = await refreshTokenService.getActiveTokensForUser(user.id);
 
       expect(activeTokens).toHaveLength(2);
-      expect(activeTokens.map(t => t.userAgent)).toContain('Chrome');
-      expect(activeTokens.map(t => t.userAgent)).toContain('Safari');
+      expect(activeTokens.map(t => t.deviceInfo.userAgent)).toContain('Chrome');
+      expect(activeTokens.map(t => t.deviceInfo.userAgent)).toContain('Safari');
     });
   });
 
@@ -323,7 +323,7 @@ describe('Token Lifecycle Integration Tests', () => {
           userId: user.id,
           tokenHash: expiredTokenHash,
           expiresAt: new Date(Date.now() - 86400000), // 1 day ago
-          ipAddress: '127.0.0.1',
+          deviceInfo: { ipAddress: '127.0.0.1' },
         }),
       );
 

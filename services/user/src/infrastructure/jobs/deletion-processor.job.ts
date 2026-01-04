@@ -5,7 +5,7 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { AccountDeletionService } from '@application/account/account-deletion.service';
 import { LoggerService } from '@infrastructure/logging/logger.service';
 

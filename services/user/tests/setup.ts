@@ -1,5 +1,6 @@
 // Jest setup file
 // Configure test environment
+import 'jest-extended';
 
 // Increase timeout for integration tests
 jest.setTimeout(30000);

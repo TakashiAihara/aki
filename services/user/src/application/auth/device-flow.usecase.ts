@@ -284,17 +284,18 @@ export class DeviceFlowUseCase {
     }
 
     // Generate tokens
-    const tokenPair = await this.jwtService.generateTokenPair({
-      sub: user.id,
-      email: user.email,
-      householdId: user.householdId || null,
-    });
+    const tokenPair = await this.jwtService.generateTokenPair(
+      user.id,
+      user.email,
+      user.householdId ?? undefined,
+    );
 
     // Store refresh token
-    await this.refreshTokenService.storeRefreshToken(
+    await this.refreshTokenService.storeToken(
       user.id,
       tokenPair.refreshToken,
-      'cli',
+      '127.0.0.1', // CLI requests
+      'aki-cli',
     );
 
     // Mark device code as used

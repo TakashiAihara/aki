@@ -8,6 +8,7 @@ import { AppleTokenService } from '../../src/infrastructure/auth/apple-token.ser
 import { OAuthStateService } from '../../src/infrastructure/auth/oauth-state.service';
 import { RefreshTokenService } from '../../src/application/auth/refresh-token.service';
 import { OAuthProvider } from '../../src/domain/entities/oauth-link.entity';
+import { UserStatus } from '../../src/domain/entities/user.entity';
 import { UnauthorizedException, BadRequestException } from '@nestjs/common';
 
 /**
@@ -30,12 +31,15 @@ describe('AppleSignInUseCase', () => {
     displayName: 'Apple User',
     avatarUrl: null,
     householdId: null,
+    status: UserStatus.ACTIVE,
     notificationPreferences: {},
     createdAt: new Date(),
     updatedAt: new Date(),
-    deletionRequestedAt: null,
+    deletionScheduledAt: null,
     oauthLinks: [],
     refreshTokens: [],
+    isPendingDeletion: () => false,
+    isActive: () => true,
   };
 
   const mockOAuthLink = {
@@ -43,6 +47,7 @@ describe('AppleSignInUseCase', () => {
     userId: mockUser.id,
     provider: OAuthProvider.APPLE,
     providerUserId: '000000.abcdef123456.7890',
+    email: 'test@privaterelay.appleid.com',
     providerEmail: 'test@privaterelay.appleid.com',
     createdAt: new Date(),
     user: mockUser,
@@ -145,8 +150,8 @@ describe('AppleSignInUseCase', () => {
       oauthLinkRepository.findByProviderAndProviderId.mockResolvedValue(mockOAuthLink);
       userRepository.findById.mockResolvedValue(mockUser);
       jwtService.generateTokenPair.mockResolvedValue(mockTokenPair);
-      refreshTokenService.storeToken.mockResolvedValue(undefined);
-      authEventService.logLoginSuccess.mockResolvedValue(undefined);
+      refreshTokenService.storeToken.mockResolvedValue(undefined as never);
+      authEventService.logLoginSuccess.mockResolvedValue(undefined as never);
 
       const result = await useCase.execute(
         'valid-identity-token',
@@ -177,8 +182,8 @@ describe('AppleSignInUseCase', () => {
       oauthLinkRepository.create.mockReturnValue(mockOAuthLink);
       oauthLinkRepository.save.mockResolvedValue(mockOAuthLink);
       jwtService.generateTokenPair.mockResolvedValue(mockTokenPair);
-      refreshTokenService.storeToken.mockResolvedValue(undefined);
-      authEventService.logLoginSuccess.mockResolvedValue(undefined);
+      refreshTokenService.storeToken.mockResolvedValue(undefined as never);
+      authEventService.logLoginSuccess.mockResolvedValue(undefined as never);
 
       const result = await useCase.execute(
         'valid-identity-token',
@@ -204,8 +209,8 @@ describe('AppleSignInUseCase', () => {
       oauthLinkRepository.create.mockReturnValue(mockOAuthLink);
       oauthLinkRepository.save.mockResolvedValue(mockOAuthLink);
       jwtService.generateTokenPair.mockResolvedValue(mockTokenPair);
-      refreshTokenService.storeToken.mockResolvedValue(undefined);
-      authEventService.logLoginSuccess.mockResolvedValue(undefined);
+      refreshTokenService.storeToken.mockResolvedValue(undefined as never);
+      authEventService.logLoginSuccess.mockResolvedValue(undefined as never);
 
       await useCase.execute('valid-identity-token', undefined, requestContext);
 
@@ -218,7 +223,7 @@ describe('AppleSignInUseCase', () => {
 
     it('should throw UnauthorizedException for invalid state', async () => {
       oauthStateService.consumeState.mockResolvedValue(false);
-      authEventService.logLoginFailure.mockResolvedValue(undefined);
+      authEventService.logLoginFailure.mockResolvedValue(undefined as never);
 
       await expect(
         useCase.execute('valid-token', undefined, requestContext),
@@ -230,7 +235,7 @@ describe('AppleSignInUseCase', () => {
     it('should throw UnauthorizedException for invalid identity token', async () => {
       oauthStateService.consumeState.mockResolvedValue(true);
       appleTokenService.verifyIdentityToken.mockRejectedValue(new Error('Invalid token'));
-      authEventService.logLoginFailure.mockResolvedValue(undefined);
+      authEventService.logLoginFailure.mockResolvedValue(undefined as never);
 
       await expect(
         useCase.execute('invalid-token', undefined, requestContext),
@@ -240,7 +245,7 @@ describe('AppleSignInUseCase', () => {
     it('should throw UnauthorizedException for user with pending deletion', async () => {
       const deletionPendingUser = {
         ...mockUser,
-        deletionRequestedAt: new Date(),
+        deletionScheduledAt: new Date(),
       };
       const link = { ...mockOAuthLink, user: deletionPendingUser };
 
@@ -271,7 +276,7 @@ describe('AppleSignInUseCase', () => {
 
       oauthStateService.consumeState.mockResolvedValue(true);
       appleTokenService.verifyIdentityToken.mockResolvedValue(unverifiedPayload);
-      authEventService.logLoginFailure.mockResolvedValue(undefined);
+      authEventService.logLoginFailure.mockResolvedValue(undefined as never);
 
       await expect(
         useCase.execute('token', undefined, { ipAddress: '127.0.0.1', state: 'valid' }),
@@ -289,9 +294,9 @@ describe('AppleSignInUseCase', () => {
       oauthLinkRepository.create.mockReturnValue(mockOAuthLink);
       oauthLinkRepository.save.mockResolvedValue(mockOAuthLink);
       jwtService.generateTokenPair.mockResolvedValue(mockTokenPair);
-      refreshTokenService.storeToken.mockResolvedValue(undefined);
-      authEventService.logLoginSuccess.mockResolvedValue(undefined);
-      authEventService.logOAuthLinked.mockResolvedValue(undefined);
+      refreshTokenService.storeToken.mockResolvedValue(undefined as never);
+      authEventService.logLoginSuccess.mockResolvedValue(undefined as never);
+      authEventService.logOAuthLinked.mockResolvedValue(undefined as never);
 
       const result = await useCase.execute(
         'valid-token',
@@ -316,8 +321,8 @@ describe('AppleSignInUseCase', () => {
       oauthLinkRepository.findByProviderAndProviderId.mockResolvedValue(mockOAuthLink);
       userRepository.findById.mockResolvedValue(mockUser);
       jwtService.generateTokenPair.mockResolvedValue(mockTokenPair);
-      refreshTokenService.storeToken.mockResolvedValue(undefined);
-      authEventService.logLoginSuccess.mockResolvedValue(undefined);
+      refreshTokenService.storeToken.mockResolvedValue(undefined as never);
+      authEventService.logLoginSuccess.mockResolvedValue(undefined as never);
 
       await useCase.execute(
         'valid-token',

@@ -5,7 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { User } from '../../src/domain/entities/user.entity';
 import { OAuthLink, OAuthProvider } from '../../src/domain/entities/oauth-link.entity';
 import { RefreshToken } from '../../src/domain/entities/refresh-token.entity';
-import { AuthEvent } from '../../src/domain/entities/auth-event.entity';
+import { AuthEvent, AuthEventType } from '../../src/domain/entities/auth-event.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from '../../src/infrastructure/auth/jwt.service';
 
@@ -268,7 +268,7 @@ describe('Apple Auth Integration Tests', () => {
 
       const authEvent = authEventRepository.create({
         userId: savedUser.id,
-        eventType: 'LOGIN_SUCCESS',
+        eventType: AuthEventType.LOGIN_SUCCESS,
         ipAddress: '192.168.1.1',
         userAgent: 'Mozilla/5.0 (iPhone)',
         metadata: { provider: 'apple' },

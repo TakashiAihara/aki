@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, IsNull, Not } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from '@domain/entities/user.entity';
 import { UserRepository } from '@domain/repositories/user.repository';
 
@@ -38,8 +38,8 @@ export class UserRepositoryImpl implements UserRepository {
 
     return this.repository
       .createQueryBuilder('user')
-      .where('user.deletionRequestedAt IS NOT NULL')
-      .andWhere('user.deletionRequestedAt <= :cutoff', { cutoff: thirtyDaysAgo })
+      .where('user.deletionScheduledAt IS NOT NULL')
+      .andWhere('user.deletionScheduledAt <= :cutoff', { cutoff: thirtyDaysAgo })
       .getMany();
   }
 
@@ -52,7 +52,7 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async update(id: string, data: Partial<User>): Promise<User> {
-    await this.repository.update(id, data);
+    await this.repository.update(id, data as Record<string, unknown>);
     const updated = await this.findById(id);
     if (!updated) {
       throw new Error(`User with id ${id} not found`);

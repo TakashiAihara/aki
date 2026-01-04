@@ -46,7 +46,7 @@ export class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
   }
 
   async update(id: string, data: Partial<RefreshToken>): Promise<RefreshToken> {
-    await this.repository.update(id, data);
+    await this.repository.update(id, data as Record<string, unknown>);
     const updated = await this.repository.findOne({ where: { id } });
     if (!updated) {
       throw new Error(`RefreshToken with id ${id} not found`);

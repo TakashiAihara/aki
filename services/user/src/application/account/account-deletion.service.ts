@@ -313,11 +313,4 @@ export class AccountDeletionService {
       );
     }
   }
-
-  /**
-   * Get grace period in days
-   */
-  private calculateGracePeriod(): number {
-    return GRACE_PERIOD_DAYS;
-  }
 }

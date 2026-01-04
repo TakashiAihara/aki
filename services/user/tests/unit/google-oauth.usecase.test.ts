@@ -29,7 +29,7 @@ describe('GoogleOAuthUseCase', () => {
     notificationPreferences: {},
     createdAt: new Date(),
     updatedAt: new Date(),
-    deletionRequestedAt: null,
+    deletionScheduledAt: null,
     oauthLinks: [],
     refreshTokens: [],
   };
@@ -262,7 +262,7 @@ describe('GoogleOAuthUseCase', () => {
     it('should reject login for user with pending deletion', async () => {
       const deletionPendingUser = {
         ...mockUser,
-        deletionRequestedAt: new Date(),
+        deletionScheduledAt: new Date(),
       };
       const link = { ...mockOAuthLink, user: deletionPendingUser };
 

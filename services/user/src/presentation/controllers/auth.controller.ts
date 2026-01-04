@@ -116,7 +116,7 @@ export class AuthController {
   })
   async googleAuthCallbackPost(
     @Body() body: OAuthCallbackDto,
-    @Req() req: Request,
+    @Req() _req: Request,
   ): Promise<TokenResponseDto> {
     // Validate state first
     const isValidState = await this.oauthStateService.validateState(body.state);

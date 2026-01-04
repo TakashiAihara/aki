@@ -4,15 +4,15 @@ import { InventoryItem } from './inventory-item.entity';
 @Entity('storage_locations')
 export class StorageLocation {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ type: 'varchar', length: 50, unique: true })
   @Index('idx_storage_name')
-  name: string;
+  name!: string;
 
   @Column({ type: 'int', default: 0 })
-  sortOrder: number;
+  sortOrder!: number;
 
   @OneToMany(() => InventoryItem, (item) => item.storageLocation)
-  items: InventoryItem[];
+  items!: InventoryItem[];
 }

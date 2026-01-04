@@ -123,7 +123,7 @@ export class ProfileService {
     householdId?: string | null;
     notificationPreferences: Record<string, unknown>;
     createdAt: Date;
-    deletionRequestedAt?: Date | null;
+    deletionScheduledAt?: Date | null;
   }): UserProfile {
     return {
       id: user.id,
@@ -137,7 +137,7 @@ export class ProfileService {
         reminderNotifications: user.notificationPreferences?.reminderNotifications as boolean | undefined,
       },
       createdAt: user.createdAt,
-      deletionRequestedAt: user.deletionRequestedAt ?? null,
+      deletionScheduledAt: user.deletionScheduledAt ?? null,
     };
   }
 }

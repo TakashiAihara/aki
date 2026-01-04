@@ -29,6 +29,9 @@ export class RefreshToken {
   @Index('idx_refresh_expires')
   expiresAt!: Date;
 
+  @Column({ type: 'timestamptz', nullable: true, name: 'revoked_at' })
+  revokedAt?: Date | null;
+
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt!: Date;
 

@@ -1,6 +1,6 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThan } from 'typeorm';
+import { Repository, LessThan, IsNull } from 'typeorm';
 import { RefreshToken } from '@domain/entities/refresh-token.entity';
 import { JwtService } from '@infrastructure/auth/jwt.service';
 import { ConfigService } from '@nestjs/config';
@@ -35,8 +35,10 @@ export class RefreshTokenService {
       userId,
       tokenHash,
       expiresAt,
-      ipAddress,
-      userAgent,
+      deviceInfo: {
+        ipAddress,
+        userAgent: userAgent ?? null,
+      },
     });
 
     return this.refreshTokenRepository.save(refreshToken);
@@ -74,7 +76,7 @@ export class RefreshTokenService {
 
   async revokeAllUserTokens(userId: string): Promise<number> {
     const result = await this.refreshTokenRepository.update(
-      { userId, revokedAt: undefined },
+      { userId, revokedAt: IsNull() },
       { revokedAt: new Date() },
     );
 
@@ -120,7 +122,7 @@ export class RefreshTokenService {
     return this.refreshTokenRepository.find({
       where: {
         userId,
-        revokedAt: undefined,
+        revokedAt: IsNull(),
       },
       order: { createdAt: 'DESC' },
     });

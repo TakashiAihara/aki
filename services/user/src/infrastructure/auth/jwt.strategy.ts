@@ -7,7 +7,7 @@ import { JwtPayload } from '@aki/shared';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(private readonly configService: ConfigService) {
+  constructor(configService: ConfigService) {
     const publicKeyPath = configService.get<string>('JWT_PUBLIC_KEY_PATH', './keys/public.pem');
 
     let secretOrKey: string;

@@ -17,7 +17,6 @@ export const REDIS_CLIENT = 'REDIS_CLIENT';
           host,
           port,
           maxRetriesPerRequest: 3,
-          retryDelayOnFailover: 100,
           lazyConnect: true,
         });
       },

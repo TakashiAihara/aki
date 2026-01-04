@@ -10,10 +10,10 @@ import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { JwtService } from '../../src/infrastructure/auth/jwt.service';
 import { DataSource } from 'typeorm';
-import { User } from '../../src/domain/entities/user.entity';
-import { OAuthLink } from '../../src/domain/entities/oauth-link.entity';
+import { User, UserStatus } from '../../src/domain/entities/user.entity';
+import { OAuthLink, OAuthProvider } from '../../src/domain/entities/oauth-link.entity';
 import { RefreshToken } from '../../src/domain/entities/refresh-token.entity';
-import { AuthEvent } from '../../src/domain/entities/auth-event.entity';
+import { AuthEvent, AuthEventType } from '../../src/domain/entities/auth-event.entity';
 import { Household } from '../../src/domain/entities/household.entity';
 import { HouseholdMember, HouseholdRole } from '../../src/domain/entities/household-member.entity';
 import { AccountDeletionService } from '../../src/application/account/account-deletion.service';
@@ -46,16 +46,16 @@ describe('GDPR Deletion Flow (Integration)', () => {
     testUser = userRepo.create({
       email: `test-${Date.now()}@example.com`,
       displayName: 'Test User',
-      status: 'active',
+      status: UserStatus.ACTIVE,
     });
     testUser = await userRepo.save(testUser);
 
     // Generate access token
-    const tokenPair = await jwtService.generateTokenPair({
-      sub: testUser.id,
-      email: testUser.email,
-      householdId: null,
-    });
+    const tokenPair = await jwtService.generateTokenPair(
+      testUser.id,
+      testUser.email,
+      undefined,
+    );
     accessToken = tokenPair.accessToken;
   });
 
@@ -152,7 +152,7 @@ describe('GDPR Deletion Flow (Integration)', () => {
       // Create OAuth link
       const oauthLink = oauthLinkRepo.create({
         userId: testUser.id,
-        provider: 'google',
+        provider: OAuthProvider.GOOGLE,
         providerUserId: 'google-123',
         email: testUser.email,
       });
@@ -169,7 +169,7 @@ describe('GDPR Deletion Flow (Integration)', () => {
       // Create auth event
       const authEvent = authEventRepo.create({
         userId: testUser.id,
-        eventType: 'login_success',
+        eventType: AuthEventType.LOGIN_SUCCESS,
         ipAddress: '127.0.0.1',
       });
       await authEventRepo.save(authEvent);
@@ -178,7 +178,7 @@ describe('GDPR Deletion Flow (Integration)', () => {
       const pastDate = new Date();
       pastDate.setDate(pastDate.getDate() - 1);
       await userRepo.update(testUser.id, {
-        status: 'pending_deletion',
+        status: UserStatus.PENDING_DELETION,
         deletionScheduledAt: pastDate,
       });
 
@@ -205,7 +205,6 @@ describe('GDPR Deletion Flow (Integration)', () => {
   describe('Household Ownership Handling', () => {
     let household: Household;
     let member: User;
-    let memberAccessToken: string;
 
     beforeEach(async () => {
       const userRepo = dataSource.getRepository(User);
@@ -234,7 +233,7 @@ describe('GDPR Deletion Flow (Integration)', () => {
       member = userRepo.create({
         email: `member-${Date.now()}@example.com`,
         displayName: 'Member User',
-        status: 'active',
+        status: UserStatus.ACTIVE,
         householdId: household.id,
       });
       member = await userRepo.save(member);
@@ -246,13 +245,12 @@ describe('GDPR Deletion Flow (Integration)', () => {
       });
       await memberRepo.save(householdMember);
 
-      // Generate token for member
-      const tokenPair = await jwtService.generateTokenPair({
-        sub: member.id,
-        email: member.email,
-        householdId: household.id,
-      });
-      memberAccessToken = tokenPair.accessToken;
+      // Generate token for member (for potential future use in tests)
+      await jwtService.generateTokenPair(
+        member.id,
+        member.email,
+        household.id,
+      );
     });
 
     afterEach(async () => {
@@ -314,7 +312,7 @@ describe('GDPR Deletion Flow (Integration)', () => {
 
       const authEventRepo = dataSource.getRepository(AuthEvent);
       const events = await authEventRepo.find({
-        where: { userId: testUser.id, eventType: 'deletion_requested' },
+        where: { userId: testUser.id, eventType: AuthEventType.ACCOUNT_DELETION_REQUESTED },
       });
 
       expect(events.length).toBeGreaterThan(0);
@@ -335,7 +333,7 @@ describe('GDPR Deletion Flow (Integration)', () => {
 
       const authEventRepo = dataSource.getRepository(AuthEvent);
       const events = await authEventRepo.find({
-        where: { userId: testUser.id, eventType: 'deletion_cancelled' },
+        where: { userId: testUser.id, eventType: AuthEventType.ACCOUNT_DELETION_CANCELLED },
       });
 
       expect(events.length).toBeGreaterThan(0);

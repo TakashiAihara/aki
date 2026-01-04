@@ -24,7 +24,6 @@ import {
   JoinHouseholdRequestDto,
   UpdateHouseholdRequestDto,
   TransferOwnershipRequestDto,
-  RemoveMemberRequestDto,
   HouseholdResponseDto,
   HouseholdMemberResponseDto,
   HouseholdInviteResponseDto,

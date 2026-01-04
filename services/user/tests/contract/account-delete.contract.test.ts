@@ -10,7 +10,7 @@ import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { JwtService } from '../../src/infrastructure/auth/jwt.service';
 import { DataSource } from 'typeorm';
-import { User } from '../../src/domain/entities/user.entity';
+import { User, UserStatus } from '../../src/domain/entities/user.entity';
 
 describe('POST /account/delete (Contract)', () => {
   let app: INestApplication;
@@ -38,16 +38,16 @@ describe('POST /account/delete (Contract)', () => {
     testUser = userRepo.create({
       email: `test-${Date.now()}@example.com`,
       displayName: 'Test User',
-      status: 'active',
+      status: UserStatus.ACTIVE,
     });
     testUser = await userRepo.save(testUser);
 
     // Generate access token
-    const tokenPair = await jwtService.generateTokenPair({
-      sub: testUser.id,
-      email: testUser.email,
-      householdId: null,
-    });
+    const tokenPair = await jwtService.generateTokenPair(
+      testUser.id,
+      testUser.email,
+      undefined,
+    );
     accessToken = tokenPair.accessToken;
   });
 

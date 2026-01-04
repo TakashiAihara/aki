@@ -18,59 +18,59 @@ import { StorageLocation } from './storage-location.entity';
 @Check('CHK_quantity_positive', 'quantity >= 0')
 export class InventoryItem {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ type: 'uuid', nullable: true })
   @Index('idx_inventory_household')
-  householdId: string | null;
+  householdId!: string | null;
 
   @Column({ type: 'varchar', length: 200 })
-  name: string;
+  name!: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  quantity: number;
+  quantity!: number;
 
   @Column({ type: 'varchar', length: 20 })
-  unit: string;
+  unit!: string;
 
   @Column({ type: 'date', nullable: true })
   @Index('idx_inventory_expiration', { where: 'expiration_date IS NOT NULL' })
-  expirationDate: Date | null;
+  expirationDate!: Date | null;
 
   @Column({ type: 'uuid' })
-  categoryId: string;
+  categoryId!: string;
 
   @ManyToOne(() => Category, (category) => category.items, { eager: true })
   @JoinColumn({ name: 'categoryId' })
-  category: Category;
+  category!: Category;
 
   @Column({ type: 'uuid', nullable: true })
-  storageLocationId: string | null;
+  storageLocationId!: string | null;
 
   @ManyToOne(() => StorageLocation, (location) => location.items, { eager: true, nullable: true })
   @JoinColumn({ name: 'storageLocationId' })
-  storageLocation: StorageLocation | null;
+  storageLocation!: StorageLocation | null;
 
   @Column({ type: 'varchar', length: 500, nullable: true })
-  imageUrl: string | null;
+  imageUrl!: string | null;
 
   @Column({ type: 'text', nullable: true })
-  notes: string | null;
+  notes!: string | null;
 
   @Column({ type: 'boolean', default: false })
-  isDepleted: boolean;
+  isDepleted!: boolean;
 
   @Column({ type: 'uuid' })
-  createdBy: string;
+  createdBy!: string;
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ type: 'timestamp with time zone' })
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @Column({ type: 'uuid' })
-  updatedBy: string;
+  updatedBy!: string;
 
   /**
    * Check if the item is expired

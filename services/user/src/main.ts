@@ -5,11 +5,9 @@ import { AppModule } from './app.module';
 import { getCorsConfig } from './infrastructure/http/cors.config';
 import { getHelmetConfig } from './infrastructure/http/helmet.config';
 import { RequestIdMiddleware } from './infrastructure/http/request-id.middleware';
-import { initializeTracing } from './infrastructure/tracing/opentelemetry.config';
 
 async function bootstrap() {
-  // Initialize OpenTelemetry tracing before NestJS
-  initializeTracing();
+  // OpenTelemetry tracing is disabled (optional feature)
 
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],

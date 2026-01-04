@@ -57,7 +57,7 @@ export class ProfileController {
       householdId: profile.householdId,
       notificationPreferences: profile.notificationPreferences,
       createdAt: profile.createdAt,
-      deletionRequestedAt: profile.deletionRequestedAt,
+      deletionScheduledAt: profile.deletionScheduledAt,
     };
   }
 
@@ -101,7 +101,7 @@ export class ProfileController {
       householdId: profile.householdId,
       notificationPreferences: profile.notificationPreferences,
       createdAt: profile.createdAt,
-      deletionRequestedAt: profile.deletionRequestedAt,
+      deletionScheduledAt: profile.deletionScheduledAt,
     };
   }
 

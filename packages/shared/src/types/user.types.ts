@@ -9,7 +9,7 @@ export interface UserProfile {
   householdId?: string | null;
   notificationPreferences: NotificationPreferences;
   createdAt: Date;
-  deletionRequestedAt?: Date | null;
+  deletionScheduledAt?: Date | null;
 }
 
 /**

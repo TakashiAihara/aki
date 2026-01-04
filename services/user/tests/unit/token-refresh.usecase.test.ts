@@ -28,7 +28,7 @@ describe('TokenRefreshUseCase', () => {
     notificationPreferences: {},
     createdAt: new Date(),
     updatedAt: new Date(),
-    deletionRequestedAt: null,
+    deletionScheduledAt: null,
     oauthLinks: [],
     refreshTokens: [],
   };
@@ -141,7 +141,7 @@ describe('TokenRefreshUseCase', () => {
     it('should throw UnauthorizedException for user with pending deletion', async () => {
       const deletionPendingUser = {
         ...mockUser,
-        deletionRequestedAt: new Date(),
+        deletionScheduledAt: new Date(),
       };
       const tokenWithDeletionUser = {
         ...mockRefreshToken,

@@ -118,7 +118,7 @@ export class ProfileResponseDto {
     example: '2024-01-15T00:00:00.000Z',
     nullable: true,
   })
-  deletionRequestedAt?: Date | null;
+  deletionScheduledAt?: Date | null;
 }
 
 export class OAuthLinkResponseDto {

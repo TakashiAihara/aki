@@ -10,7 +10,7 @@ import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { JwtService } from '../../src/infrastructure/auth/jwt.service';
 import { DataSource } from 'typeorm';
-import { User } from '../../src/domain/entities/user.entity';
+import { User, UserStatus } from '../../src/domain/entities/user.entity';
 
 describe('POST /account/delete/cancel (Contract)', () => {
   let app: INestApplication;
@@ -41,17 +41,17 @@ describe('POST /account/delete/cancel (Contract)', () => {
     testUser = userRepo.create({
       email: `test-${Date.now()}@example.com`,
       displayName: 'Test User',
-      status: 'pending_deletion',
+      status: UserStatus.PENDING_DELETION,
       deletionScheduledAt: deletionDate,
     });
     testUser = await userRepo.save(testUser);
 
     // Generate access token
-    const tokenPair = await jwtService.generateTokenPair({
-      sub: testUser.id,
-      email: testUser.email,
-      householdId: null,
-    });
+    const tokenPair = await jwtService.generateTokenPair(
+      testUser.id,
+      testUser.email,
+      undefined,
+    );
     accessToken = tokenPair.accessToken;
   });
 
@@ -132,15 +132,15 @@ describe('POST /account/delete/cancel (Contract)', () => {
       const activeUser = userRepo.create({
         email: `active-${Date.now()}@example.com`,
         displayName: 'Active User',
-        status: 'active',
+        status: UserStatus.ACTIVE,
       });
       await userRepo.save(activeUser);
 
-      const tokenPair = await jwtService.generateTokenPair({
-        sub: activeUser.id,
-        email: activeUser.email,
-        householdId: null,
-      });
+      const tokenPair = await jwtService.generateTokenPair(
+        activeUser.id,
+        activeUser.email,
+        undefined,
+      );
 
       const response = await request(app.getHttpServer())
         .post('/account/delete/cancel')

@@ -21,7 +21,7 @@ export class CreateInventoryItemDto {
   @IsString()
   @MinLength(1)
   @MaxLength(200)
-  name: string;
+  name!: string;
 
   @ApiProperty({
     description: 'Quantity of the item',
@@ -31,7 +31,7 @@ export class CreateInventoryItemDto {
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   @Max(9999999999.99)
-  quantity: number;
+  quantity!: number;
 
   @ApiProperty({
     description: 'Unit of measurement',
@@ -42,7 +42,7 @@ export class CreateInventoryItemDto {
   @IsString()
   @MinLength(1)
   @MaxLength(20)
-  unit: string;
+  unit!: string;
 
   @ApiPropertyOptional({
     description: 'Expiration date (ISO 8601 format)',
@@ -58,7 +58,7 @@ export class CreateInventoryItemDto {
     example: '550e8400-e29b-41d4-a716-446655440000',
   })
   @IsUUID()
-  categoryId: string;
+  categoryId!: string;
 
   @ApiPropertyOptional({
     description: 'Storage location UUID',

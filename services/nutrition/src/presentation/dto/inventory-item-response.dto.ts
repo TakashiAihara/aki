@@ -4,77 +4,77 @@ import { ExpirationStatus, getExpirationStatus } from '@aki/shared';
 
 export class CategoryResponseDto {
   @ApiProperty({ description: 'Category UUID' })
-  id: string;
+  id!: string;
 
   @ApiProperty({ description: 'Category name' })
-  name: string;
+  name!: string;
 
   @ApiPropertyOptional({ description: 'Category icon' })
-  icon: string | null;
+  icon!: string | null;
 
   @ApiProperty({ description: 'Sort order' })
-  sortOrder: number;
+  sortOrder!: number;
 }
 
 export class StorageLocationResponseDto {
   @ApiProperty({ description: 'Storage location UUID' })
-  id: string;
+  id!: string;
 
   @ApiProperty({ description: 'Storage location name' })
-  name: string;
+  name!: string;
 
   @ApiProperty({ description: 'Sort order' })
-  sortOrder: number;
+  sortOrder!: number;
 }
 
 export class InventoryItemResponseDto {
   @ApiProperty({ description: 'Item UUID' })
-  id: string;
+  id!: string;
 
   @ApiPropertyOptional({ description: 'Household UUID (null for personal inventory)' })
-  householdId: string | null;
+  householdId!: string | null;
 
   @ApiProperty({ description: 'Item name' })
-  name: string;
+  name!: string;
 
   @ApiProperty({ description: 'Quantity' })
-  quantity: number;
+  quantity!: number;
 
   @ApiProperty({ description: 'Unit of measurement' })
-  unit: string;
+  unit!: string;
 
   @ApiPropertyOptional({ description: 'Expiration date (ISO 8601)' })
-  expirationDate: string | null;
+  expirationDate!: string | null;
 
   @ApiProperty({ description: 'Category' })
-  category: CategoryResponseDto;
+  category!: CategoryResponseDto;
 
   @ApiPropertyOptional({ description: 'Storage location' })
-  storageLocation: StorageLocationResponseDto | null;
+  storageLocation!: StorageLocationResponseDto | null;
 
   @ApiPropertyOptional({ description: 'Image URL' })
-  imageUrl: string | null;
+  imageUrl!: string | null;
 
   @ApiPropertyOptional({ description: 'Notes' })
-  notes: string | null;
+  notes!: string | null;
 
   @ApiProperty({ description: 'Is item depleted (quantity = 0)' })
-  isDepleted: boolean;
+  isDepleted!: boolean;
 
   @ApiProperty({ description: 'Expiration status', enum: ExpirationStatus })
-  expirationStatus: ExpirationStatus;
+  expirationStatus!: ExpirationStatus;
 
   @ApiProperty({ description: 'Created by user UUID' })
-  createdBy: string;
+  createdBy!: string;
 
   @ApiProperty({ description: 'Created timestamp (ISO 8601)' })
-  createdAt: string;
+  createdAt!: string;
 
   @ApiProperty({ description: 'Updated timestamp (ISO 8601)' })
-  updatedAt: string;
+  updatedAt!: string;
 
   @ApiProperty({ description: 'Updated by user UUID' })
-  updatedBy: string;
+  updatedBy!: string;
 
   static fromEntity(entity: InventoryItem): InventoryItemResponseDto {
     const dto = new InventoryItemResponseDto();
@@ -111,10 +111,10 @@ export class InventoryItemResponseDto {
 
 export class PaginationDto {
   @ApiPropertyOptional({ description: 'Cursor for next page' })
-  cursor: string | null;
+  cursor!: string | null;
 
   @ApiProperty({ description: 'Has more items' })
-  hasMore: boolean;
+  hasMore!: boolean;
 
   @ApiPropertyOptional({ description: 'Total count (if available)' })
   total?: number;
@@ -122,8 +122,8 @@ export class PaginationDto {
 
 export class InventoryItemListResponseDto {
   @ApiProperty({ type: [InventoryItemResponseDto], description: 'List of inventory items' })
-  items: InventoryItemResponseDto[];
+  items!: InventoryItemResponseDto[];
 
   @ApiProperty({ description: 'Pagination info' })
-  pagination: PaginationDto;
+  pagination!: PaginationDto;
 }
