@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder, IsNull } from 'typeorm';
+import { db } from './drizzle.config';
+import { inventoryItems, categories, storageLocations } from './schema';
+import { eq, and, or, like, desc, asc, sql } from 'drizzle-orm';
 import { InventoryItem } from '@domain/entities/inventory-item.entity';
 import {
   IInventoryItemRepository,
@@ -10,10 +11,7 @@ import {
 
 @Injectable()
 export class InventoryItemRepositoryImpl implements IInventoryItemRepository {
-  constructor(
-    @InjectRepository(InventoryItem)
-    private readonly repository: Repository<InventoryItem>,
-  ) {}
+  // Drizzle ORM implementation
 
   async create(item: Partial<InventoryItem>): Promise<InventoryItem> {
     const entity = this.repository.create(item);
