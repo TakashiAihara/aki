@@ -1,5 +1,13 @@
 import { pgTable, uuid, varchar, decimal, date, text, boolean, timestamp, index, check, integer } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
+import { sql, InferSelectModel } from 'drizzle-orm';
+
+export type InventoryItem = InferSelectModel<typeof inventoryItems> & {
+  category?: InferSelectModel<typeof categories>;
+  storageLocation?: InferSelectModel<typeof storageLocations>;
+};
+
+export type Category = InferSelectModel<typeof categories>;
+export type StorageLocation = InferSelectModel<typeof storageLocations>;
 
 export const categories = pgTable('categories', {
   id: uuid('id').primaryKey().defaultRandom(),

@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { db } from './drizzle.config';
-import { inventoryItems, categories, storageLocations } from './schema';
-import { eq, and, or, like, desc, asc, sql } from 'drizzle-orm';
-import { InventoryItem } from '@domain/entities/inventory-item.entity';
+import { inventoryItems, categories, storageLocations, InventoryItem } from './schema';
+import { eq, and, or, like, desc, asc, sql, isNull } from 'drizzle-orm';
 import {
   IInventoryItemRepository,
   InventoryItemFilter,
@@ -11,34 +10,72 @@ import {
 
 @Injectable()
 export class InventoryItemRepositoryImpl implements IInventoryItemRepository {
-  // Drizzle ORM implementation
 
   async create(item: Partial<InventoryItem>): Promise<InventoryItem> {
-    const entity = this.repository.create(item);
-    return this.repository.save(entity);
+    const result = await db.insert(inventoryItems).values({
+      id: item.id,
+      householdId: item.householdId,
+      name: item.name!,
+      quantity: item.quantity!,
+      unit: item.unit!,
+      expirationDate: item.expirationDate,
+      categoryId: item.categoryId!,
+      storageLocationId: item.storageLocationId,
+      imageUrl: item.imageUrl,
+      notes: item.notes,
+      isDepleted: item.isDepleted!,
+      createdBy: item.createdBy!,
+      createdAt: item.createdAt!,
+      updatedAt: item.updatedAt!,
+      updatedBy: item.updatedBy!,
+    }).returning();
+
+    const inserted = result[0];
+    return this.findById(inserted.id, item.householdId);
   }
 
   async update(id: string, item: Partial<InventoryItem>): Promise<InventoryItem | null> {
-    await this.repository.update(id, item);
-    return this.repository.findOne({
-      where: { id },
-      relations: ['category', 'storageLocation'],
-    });
+    await db.update(inventoryItems)
+      .set({
+        householdId: item.householdId,
+        name: item.name,
+        quantity: item.quantity,
+        unit: item.unit,
+        expirationDate: item.expirationDate,
+        categoryId: item.categoryId,
+        storageLocationId: item.storageLocationId,
+        imageUrl: item.imageUrl,
+        notes: item.notes,
+        isDepleted: item.isDepleted,
+        updatedAt: item.updatedAt,
+        updatedBy: item.updatedBy,
+      })
+      .where(eq(inventoryItems.id, id));
+
+    return this.findById(id, item.householdId);
   }
 
   async delete(id: string): Promise<boolean> {
-    const result = await this.repository.delete(id);
-    return (result.affected ?? 0) > 0;
+    const result = await db.delete(inventoryItems).where(eq(inventoryItems.id, id));
+    return result.rowCount > 0;
   }
 
   async findById(id: string, householdId: string | null): Promise<InventoryItem | null> {
-    return this.repository.findOne({
-      where: {
-        id,
-        householdId: householdId ?? IsNull(),
-      },
-      relations: ['category', 'storageLocation'],
-    });
+    const result = await db.select({
+      ...inventoryItems,
+      category: categories,
+      storageLocation: storageLocations,
+    })
+      .from(inventoryItems)
+      .leftJoin(categories, eq(inventoryItems.categoryId, categories.id))
+      .leftJoin(storageLocations, eq(inventoryItems.storageLocationId, storageLocations.id))
+      .where(and(
+        eq(inventoryItems.id, id),
+        householdId ? eq(inventoryItems.householdId, householdId) : isNull(inventoryItems.householdId)
+      ))
+      .limit(1);
+
+    return result[0] || null;
   }
 
   async findByHousehold(filter: InventoryItemFilter): Promise<PaginatedResult<InventoryItem>> {
