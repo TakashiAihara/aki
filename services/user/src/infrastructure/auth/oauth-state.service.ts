@@ -3,11 +3,11 @@ import { RedisService } from '../cache/redis.service';
 import * as crypto from 'crypto';
 
 const STATE_PREFIX = 'oauth:state:';
-const STATE_TTL_SECONDS = 600; // 10 minutes
+const STATE_TTL_SECONDS = 300; // 5 minutes
 
 @Injectable()
 export class OAuthStateService {
-  constructor(private readonly redisService: RedisService) {}
+  constructor(private readonly redisService: RedisService) { }
 
   async generateState(): Promise<string> {
     const state = crypto.randomBytes(32).toString('base64url');

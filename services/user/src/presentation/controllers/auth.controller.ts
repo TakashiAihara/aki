@@ -9,7 +9,9 @@ import {
   HttpCode,
   HttpStatus,
   UnauthorizedException,
+  InternalServerErrorException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiTags,
@@ -38,7 +40,8 @@ export class AuthController {
     private readonly googleOAuthUseCase: GoogleOAuthUseCase,
     private readonly appleSignInUseCase: AppleSignInUseCase,
     private readonly oauthStateService: OAuthStateService,
-  ) {}
+    private readonly configService: ConfigService,
+  ) { }
 
   @Get('google')
   @Public()
@@ -124,12 +127,83 @@ export class AuthController {
       throw new UnauthorizedException('Invalid OAuth state - possible CSRF attack');
     }
 
-    // For POST callback, we need to exchange the code with Google
-    // This would typically be done by the OAuth strategy, but for direct POST
-    // we need to handle it manually or reject
-    throw new UnauthorizedException(
-      'POST callback requires using the OAuth flow through GET /auth/google',
+    // Exchange authorization code for tokens
+    const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
+    const clientSecret = this.configService.get<string>('GOOGLE_CLIENT_SECRET');
+    const redirectUri = this.configService.get<string>(
+      'GOOGLE_CALLBACK_URL',
+      'http://localhost:3001/auth/google/callback',
     );
+
+    try {
+      // 1. Exchange code for tokens
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          code: body.code,
+          client_id: clientId || '',
+          client_secret: clientSecret || '',
+          redirect_uri: redirectUri,
+          grant_type: 'authorization_code',
+        }),
+      });
+
+      if (!tokenResponse.ok) {
+        const errorText = await tokenResponse.text();
+        throw new UnauthorizedException(`Failed to exchange code: ${errorText}`);
+      }
+
+      const tokens = await tokenResponse.json();
+
+      // 2. Get user profile
+      const profileResponse = await fetch(
+        'https://www.googleapis.com/oauth2/v3/userinfo',
+        {
+          headers: { Authorization: `Bearer ${tokens.access_token}` },
+        },
+      );
+
+      if (!profileResponse.ok) {
+        throw new UnauthorizedException('Failed to get user info from Google');
+      }
+
+      const profileData = await profileResponse.json();
+
+      // 3. Construct profile
+      const profile: GoogleProfile = {
+        id: profileData.sub,
+        email: profileData.email,
+        displayName: profileData.name,
+        avatarUrl: profileData.picture,
+      };
+
+      // 4. Execute use case
+      const tokenPair = await this.googleOAuthUseCase.execute(profile, {
+        ipAddress: this.getIpAddress(_req),
+        userAgent: _req.headers['user-agent'],
+        state: body.state, // Already consumed? No, validateState only checks, consumeState is in use case
+      });
+
+      // Note: useCase.execute CALLS consumeState.
+      // But we called validateState above.
+      // validateState (redis GET) does not remove it.
+      // consumeState (redis DEL) removes it.
+      // So this is correct.
+
+      return {
+        accessToken: tokenPair.accessToken,
+        refreshToken: tokenPair.refreshToken,
+        tokenType: tokenPair.tokenType,
+        expiresIn: tokenPair.expiresIn,
+      };
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      console.error('Google OAuth POST callback error:', error);
+      throw new InternalServerErrorException('Authentication failed');
+    }
   }
 
   @Get('state')
