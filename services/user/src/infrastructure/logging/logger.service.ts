@@ -1,45 +1,48 @@
 import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
-import * as winston from 'winston';
+import { PinoLogger } from 'nestjs-pino';
 
 @Injectable()
 export class LoggerService implements NestLoggerService {
-  private readonly logger: winston.Logger;
-
-  constructor() {
-    const isProduction = process.env.NODE_ENV === 'production';
-
-    this.logger = winston.createLogger({
-      level: isProduction ? 'info' : 'debug',
-      format: winston.format.combine(
-        winston.format.timestamp({ format: 'YYYY-MM-DDTHH:mm:ss.SSSZ' }),
-        winston.format.errors({ stack: true }),
-        isProduction
-          ? winston.format.json()
-          : winston.format.combine(winston.format.colorize(), winston.format.simple()),
-      ),
-      defaultMeta: { service: 'user-service' },
-      transports: [new winston.transports.Console()],
-    });
-  }
+  constructor(private readonly logger: PinoLogger) { }
 
   log(message: string, context?: string): void {
-    this.logger.info(message, { context });
+    if (context) {
+      this.logger.info({ context }, message);
+    } else {
+      this.logger.info(message);
+    }
   }
 
   error(message: string, trace?: string, context?: string): void {
-    this.logger.error(message, { trace, context });
+    if (context || trace) {
+      this.logger.error({ trace, context }, message);
+    } else {
+      this.logger.error(message);
+    }
   }
 
   warn(message: string, context?: string): void {
-    this.logger.warn(message, { context });
+    if (context) {
+      this.logger.warn({ context }, message);
+    } else {
+      this.logger.warn(message);
+    }
   }
 
   debug(message: string, context?: string): void {
-    this.logger.debug(message, { context });
+    if (context) {
+      this.logger.debug({ context }, message);
+    } else {
+      this.logger.debug(message);
+    }
   }
 
   verbose(message: string, context?: string): void {
-    this.logger.verbose(message, { context });
+    if (context) {
+      this.logger.trace({ context }, message);
+    } else {
+      this.logger.trace(message);
+    }
   }
 
   // Structured auth event logging
@@ -48,11 +51,14 @@ export class LoggerService implements NestLoggerService {
     userId: string | null,
     metadata: Record<string, unknown>,
   ): void {
-    this.logger.info('Auth event', {
-      eventType,
-      userId: this.maskUserId(userId),
-      ...metadata,
-    });
+    this.logger.info(
+      {
+        eventType,
+        userId: this.maskUserId(userId),
+        ...metadata,
+      },
+      'Auth event',
+    );
   }
 
   // Mask sensitive data for logs

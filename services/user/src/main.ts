@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { getCorsConfig } from './infrastructure/http/cors.config';
@@ -9,9 +10,8 @@ import { RequestIdMiddleware } from './infrastructure/http/request-id.middleware
 async function bootstrap() {
   // OpenTelemetry tracing is disabled (optional feature)
 
-  const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
-  });
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
 
   // Security: Helmet middleware
   app.use(getHelmetConfig());
@@ -46,8 +46,8 @@ async function bootstrap() {
     .setTitle('Aki User Authentication API')
     .setDescription(
       'OAuth 2.0 authentication service with Google and Apple Sign In. ' +
-        'Provides user authentication, profile management, household management, ' +
-        'and GDPR-compliant account deletion.',
+      'Provides user authentication, profile management, household management, ' +
+      'and GDPR-compliant account deletion.',
     )
     .setVersion('1.0.0')
     .addBearerAuth(
