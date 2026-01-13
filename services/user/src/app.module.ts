@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { LoggerModule } from 'nestjs-pino';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -19,6 +20,28 @@ import { JwtAuthGuard } from './presentation/guards/jwt-auth.guard';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],
+    }),
+
+    // Logging
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: process.env.NODE_ENV !== 'production'
+          ? { target: 'pino-pretty' }
+          : undefined,
+        autoLogging: true,
+        serializers: {
+          req: (req) => ({
+            id: req.id,
+            method: req.method,
+            url: req.url,
+            query: req.query,
+            params: req.params,
+          }),
+          res: (res) => ({
+            statusCode: res.statusCode,
+          }),
+        },
+      },
     }),
 
     // Database
@@ -65,4 +88,4 @@ import { JwtAuthGuard } from './presentation/guards/jwt-auth.guard';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
