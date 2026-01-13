@@ -1,4 +1,4 @@
-# Akimi Development Roadmap
+# Aki Development Roadmap
 
 **Project**: AI-Integrated Health Management Platform
 **Mission**: 生活の中の健康にかかわるすべてを管理し、LLM が励ましたり生活を手伝うための総合健康管理プラットフォーム
@@ -7,7 +7,7 @@
 
 ## Overview
 
-This roadmap outlines the development plan for the Akimi health management platform, organized around 6 bounded contexts following Domain-Driven Design principles. The plan prioritizes foundational services first, building incrementally toward a comprehensive health management ecosystem.
+This roadmap outlines the development plan for the Aki health management platform, organized around 6 bounded contexts following Domain-Driven Design principles. The plan prioritizes foundational services first, building incrementally toward a comprehensive health management ecosystem.
 
 ## Architecture Vision
 

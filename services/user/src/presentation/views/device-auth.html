@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authorize Device - Aki</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --bg: #f9fafb;
+      --card-bg: #ffffff;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      padding: 2rem;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .logo h1 {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .title h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .title p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .code-input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .code-input-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .code-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1.5rem;
+      text-align: center;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .code-input:focus {
+      border-color: var(--primary);
+    }
+
+    .code-input::placeholder {
+      letter-spacing: normal;
+      font-size: 1rem;
+    }
+
+    .device-info {
+      background: var(--bg);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    .device-info.visible {
+      display: block;
+    }
+
+    .device-info p {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .device-info strong {
+      color: var(--text);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+
+    .btn-verify {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .message {
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .message.visible {
+      display: block;
+    }
+
+    .message.success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .help-text {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <h1>Aki</h1>
+    </div>
+
+    <div class="title">
+      <h2>Authorize Device</h2>
+      <p>Enter the code shown in your CLI to authorize access</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div class="code-input-group">
+      <label for="userCode">Device Code</label>
+      <input
+        type="text"
+        id="userCode"
+        class="code-input"
+        placeholder="XXXX-XXXX"
+        maxlength="9"
+        autocomplete="off"
+        autofocus
+      />
+    </div>
+
+    <button id="verifyBtn" class="btn btn-primary btn-verify">
+      Verify Code
+    </button>
+
+    <div id="deviceInfo" class="device-info">
+      <p>Authorizing: <strong id="clientName"></strong></p>
+    </div>
+
+    <div id="actionBtns" class="btn-group" style="display: none;">
+      <button id="denyBtn" class="btn btn-danger">
+        Deny
+      </button>
+      <button id="authorizeBtn" class="btn btn-primary">
+        Authorize
+      </button>
+    </div>
+
+    <p class="help-text">
+      Only authorize devices you recognize. This will grant access to your Aki account.
+    </p>
+  </div>
+
+  <script>
+    const codeInput = document.getElementById('userCode');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const deviceInfo = document.getElementById('deviceInfo');
+    const clientName = document.getElementById('clientName');
+    const actionBtns = document.getElementById('actionBtns');
+    const authorizeBtn = document.getElementById('authorizeBtn');
+    const denyBtn = document.getElementById('denyBtn');
+    const messageEl = document.getElementById('message');
+
+    let verifiedCode = null;
+
+    // Auto-format code input (XXXX-XXXX)
+    codeInput.addEventListener('input', (e) => {
+      let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (value.length > 4) {
+        value = value.slice(0, 4) + '-' + value.slice(4, 8);
+      }
+      e.target.value = value;
+    });
+
+    // Pre-fill from URL if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const codeParam = urlParams.get('code');
+    if (codeParam) {
+      codeInput.value = codeParam;
+      verifyCode();
+    }
+
+    function showMessage(text, type) {
+      messageEl.textContent = text;
+      messageEl.className = `message visible ${type}`;
+    }
+
+    function hideMessage() {
+      messageEl.className = 'message';
+    }
+
+    async function verifyCode() {
+      const code = codeInput.value;
+      if (!code || code.length < 9) {
+        showMessage('Please enter a valid code', 'error');
+        return;
+      }
+
+      hideMessage();
+      verifyBtn.disabled = true;
+      verifyBtn.textContent = 'Verifying...';
+
+      try {
+        const response = await fetch(`/auth/device/verify?code=${encodeURIComponent(code)}`, {
+          headers: {
+            'Authorization': `Bearer ${getAccessToken()}`,
+          },
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || 'Code not found');
+        }
+
+        const data = await response.json();
+
+        if (data.status !== 'pending') {
+          showMessage('This code has already been used or expired', 'error');
+          return;
+        }
+
+        verifiedCode = code;
+        clientName.textContent = formatClientName(data.client_id);
+        deviceInfo.classList.add('visible');
+        actionBtns.style.display = 'flex';
+        verifyBtn.style.display = 'none';
+        codeInput.disabled = true;
+
+      } catch (error) {
+        showMessage(error.message, 'error');
+      } finally {
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = 'Verify Code';
+      }
+    }
+
+    async function authorizeDevice() {
+      if (!verifiedCode) return;
+
+      authorizeBtn.disabled = true;
+      denyBtn.disabled = true;
+      authorizeBtn.textContent = 'Authorizing...';
+
+      try {
+        const response = await fetch('/auth/device/authorize', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAccessToken()}`,
+          },
+          body: JSON.stringify({ user_code: verifiedCode }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || 'Authorization failed');
+        }
+
+        showMessage('Device authorized! You can close this page and return to your CLI.', 'success');
+        actionBtns.style.display = 'none';
+        deviceInfo.classList.remove('visible');
+
+      } catch (error) {
+        showMessage(error.message, 'error');
+        authorizeBtn.disabled = false;
+        denyBtn.disabled = false;
+        authorizeBtn.textContent = 'Authorize';
+      }
+    }
+
+    async function denyDevice() {
+      if (!verifiedCode) return;
+
+      authorizeBtn.disabled = true;
+      denyBtn.disabled = true;
+      denyBtn.textContent = 'Denying...';
+
+      try {
+        const response = await fetch('/auth/device/deny', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAccessToken()}`,
+          },
+          body: JSON.stringify({ user_code: verifiedCode }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || 'Denial failed');
+        }
+
+        showMessage('Device access denied. You can close this page.', 'success');
+        actionBtns.style.display = 'none';
+        deviceInfo.classList.remove('visible');
+
+      } catch (error) {
+        showMessage(error.message, 'error');
+        authorizeBtn.disabled = false;
+        denyBtn.disabled = false;
+        denyBtn.textContent = 'Deny';
+      }
+    }
+
+    function formatClientName(clientId) {
+      const names = {
+        'aki-cli': 'Aki CLI',
+      };
+      return names[clientId] || clientId;
+    }
+
+    function getAccessToken() {
+      // In production, this would get the token from a secure source
+      // For now, assume the user is already authenticated
+      return localStorage.getItem('access_token') || '';
+    }
+
+    verifyBtn.addEventListener('click', verifyCode);
+    authorizeBtn.addEventListener('click', authorizeDevice);
+    denyBtn.addEventListener('click', denyDevice);
+
+    // Allow Enter key to verify
+    codeInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        verifyCode();
+      }
+    });
+  </script>
+</body>
+</html>

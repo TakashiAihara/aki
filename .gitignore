@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+*.js.map
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Keys and secrets (NEVER commit these)
+*.pem
+*.p8
+*.key
+*.crt
+services/user/keys/private.pem
+services/user/keys/public.pem
+services/user/keys/apple-auth-key.p8
+
+# TypeORM
+*.sqlite
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

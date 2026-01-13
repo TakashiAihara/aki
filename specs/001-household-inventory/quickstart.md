@@ -23,7 +23,7 @@
 
 ```bash
 # Clone the monorepo (if not already done)
-cd /path/to/akimi
+cd /path/to/aki
 
 # Install all dependencies using pnpm workspaces
 pnpm install
@@ -40,7 +40,7 @@ Create environment files for each application:
 ```env
 NODE_ENV=development
 PORT=3001
-DATABASE_URL=postgresql://akimi:password@localhost:5432/nutrition
+DATABASE_URL=postgresql://aki:password@localhost:5432/nutrition
 REDIS_URL=redis://localhost:6379
 JWT_SECRET=your-dev-jwt-secret-change-in-production
 CORS_ORIGIN=http://localhost:3000,exp://192.168.1.100:19000
@@ -77,10 +77,10 @@ version: '3.8'
 services:
   postgres-nutrition:
     image: postgres:16-alpine
-    container_name: akimi-nutrition-db
+    container_name: aki-nutrition-db
     environment:
       POSTGRES_DB: nutrition
-      POSTGRES_USER: akimi
+      POSTGRES_USER: aki
       POSTGRES_PASSWORD: password
     ports:
       - '5432:5432'
@@ -89,7 +89,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: akimi-redis
+    container_name: aki-redis
     ports:
       - '6379:6379'
 
@@ -102,8 +102,8 @@ volumes:
 docker-compose -f docker-compose.dev.yml up -d
 
 # Verify
-docker ps | grep akimi
-psql postgresql://akimi:password@localhost:5432/nutrition -c "SELECT version();"
+docker ps | grep aki
+psql postgresql://aki:password@localhost:5432/nutrition -c "SELECT version();"
 ```
 
 ### Option B: Local PostgreSQL Installation
@@ -119,8 +119,8 @@ sudo systemctl start postgresql
 
 # Create database and user
 createdb nutrition
-psql -d nutrition -c "CREATE USER akimi WITH PASSWORD 'password';"
-psql -d nutrition -c "GRANT ALL PRIVILEGES ON DATABASE nutrition TO akimi;"
+psql -d nutrition -c "CREATE USER aki WITH PASSWORD 'password';"
+psql -d nutrition -c "GRANT ALL PRIVILEGES ON DATABASE nutrition TO aki;"
 ```
 
 ### Run Migrations
@@ -136,7 +136,7 @@ pnpm run migration:run
 pnpm run seed:ref-data
 
 # Verify
-psql postgresql://akimi:password@localhost:5432/nutrition -c "\dt"
+psql postgresql://aki:password@localhost:5432/nutrition -c "\dt"
 # Should show: inventory_items, households, categories, storage_locations
 ```
 
@@ -274,36 +274,36 @@ pnpm run build
 pnpm link --global
 
 # Verify installation
-akimi-inventory --version
+aki-inventory --version
 ```
 
 ### Usage
 
 ```bash
 # Configure API endpoint (first time)
-akimi-inventory config set-api http://localhost:3001/v1
+aki-inventory config set-api http://localhost:3001/v1
 
 # Login (requires user service)
-akimi-inventory login
+aki-inventory login
 
 # List inventory
-akimi-inventory list
+aki-inventory list
 
 # Add item (interactive)
-akimi-inventory add --interactive
+aki-inventory add --interactive
 
 # Add item (direct)
-akimi-inventory add --name "りんご" --quantity 5 --unit "個" \
+aki-inventory add --name "りんご" --quantity 5 --unit "個" \
   --expiration 2026-01-15 --category "果物"
 
 # Update item
-akimi-inventory update <item-id> --quantity 3
+aki-inventory update <item-id> --quantity 3
 
 # Delete item
-akimi-inventory delete <item-id>
+aki-inventory delete <item-id>
 
 # Sync (manual trigger)
-akimi-inventory sync
+aki-inventory sync
 ```
 
 ---
@@ -373,7 +373,7 @@ pnpm test:android        # Android emulator
 
 ```sql
 -- Connect to database
-psql postgresql://akimi:password@localhost:5432/nutrition
+psql postgresql://aki:password@localhost:5432/nutrition
 
 -- Insert category
 INSERT INTO categories (id, name, icon, sort_order)
@@ -466,7 +466,7 @@ docker ps | grep postgres  # If using Docker
 brew services list | grep postgresql  # If local install
 
 # Verify connection
-psql postgresql://akimi:password@localhost:5432/nutrition
+psql postgresql://aki:password@localhost:5432/nutrition
 ```
 
 ### Issue: Port 3001 already in use
@@ -497,7 +497,7 @@ API_URL=https://abc123.ngrok.io/v1
 ls services/nutrition/src/migrations/
 
 # Manual SQL execution
-psql postgresql://akimi:password@localhost:5432/nutrition \
+psql postgresql://aki:password@localhost:5432/nutrition \
   -f services/nutrition/src/migrations/001_create_inventory_schema.sql
 ```
 
