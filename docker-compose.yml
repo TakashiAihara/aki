@@ -18,16 +18,16 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:7-alpine
-    container_name: aki-redis
+  valkey:
+    image: valkey/valkey:7.2.5-alpine
+    container_name: aki-valkey
     ports:
       - '6379:6379'
     volumes:
-      - redis_data:/data
-    command: redis-server --appendonly yes
+      - valkey_data:/data
+    command: valkey-server --appendonly yes
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: ['CMD', 'valkey-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -44,11 +44,13 @@ services:
       - NODE_ENV=development
       - PORT=3001
       - DATABASE_URL=postgresql://aki:aki_dev@postgres:5432/aki_user
-      - REDIS_URL=redis://redis:6379
+      - REDIS_URL=redis://valkey:6379
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
+      valkey:
         condition: service_healthy
     volumes:
       - ./services/user/src:/app/src
@@ -72,13 +74,13 @@ services:
       - DATABASE_NAME=aki_nutrition
       - DATABASE_USER=aki
       - DATABASE_PASSWORD=aki_dev
-      - REDIS_HOST=redis
+      - REDIS_HOST=valkey
       - REDIS_PORT=6379
       - JWT_PUBLIC_KEY_PATH=/app/keys/public.pem
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
+      valkey:
         condition: service_healthy
     volumes:
       - ./services/nutrition/src:/app/src
@@ -88,4 +90,4 @@ services:
 
 volumes:
   postgres_data:
-  redis_data:
+  valkey_data:
