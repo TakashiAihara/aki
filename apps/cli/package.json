@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@aki/shared": "workspace:*",
-    "axios": "^1.6.0",
+    "axios": "^1.20.0",
     "chalk": "^4.1.2",
     "cli-table3": "^0.6.3",
     "commander": "^11.1.0",
